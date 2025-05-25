@@ -692,7 +692,7 @@ export default function UserSignupForm() {
                 type="button"
                 onClick={nextStep}
                 disabled={!isStepValid}
-                className="flex cursor-pointer items-center"
+                className="flex border border-orange-600 cursor-pointer items-center"
               >
                 Next
                 <ChevronRight size={20} className="ml-1" />
@@ -701,7 +701,7 @@ export default function UserSignupForm() {
               <Button
                 type="button"
                 onClick={form.handleSubmit(onSubmit)}
-                className="bg-orange-600 hover:bg-orange-700 text-white"
+                className="bg-orange-600  hover:bg-orange-700 text-white"
               >
                 Create Account
               </Button>
