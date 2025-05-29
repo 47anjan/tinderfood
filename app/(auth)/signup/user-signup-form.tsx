@@ -1,18 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  ChevronLeft,
-  ChevronRight,
-  User,
-  MapPin,
-  ChefHat,
-  Heart,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, User, MapPin, ChefHat } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -31,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cookingLevels, countries, dietaryOptions } from "@/lib/constants";
+import { useAuth } from "@/contexts/auth-provider";
 
 // Zod schema matching your Mongoose schema
 const userSchema = z
@@ -56,7 +51,6 @@ const userSchema = z
     confirmPassword: z.string(),
 
     // Profile Information
-    avatar: z.string().optional(),
     bio: z.string().max(500, "Bio must be 500 characters or less").optional(),
     location: z.object({
       city: z.string().optional(),
@@ -68,9 +62,7 @@ const userSchema = z
       "advanced",
       "professional",
     ]),
-    dietaryRestrictions: z.array(z.string()),
-    favoriteFoods: z.array(z.string()),
-    cuisinePreferences: z.array(z.string()),
+    dietaryRestrictions: z.array(z.string()).optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -97,6 +89,10 @@ function useDebounce(value: any, delay: number) {
 export default function UserSignupForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isStepValid, setIsStepValid] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { signup } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(userSchema),
@@ -106,8 +102,6 @@ export default function UserSignupForm() {
       email: "",
       password: "",
       confirmPassword: "",
-      avatar:
-        "https://cdn.vectorstock.com/i/500p/92/16/default-profile-picture-avatar-user-icon-vector-46389216.jpg",
       bio: "",
       location: {
         city: "",
@@ -115,8 +109,6 @@ export default function UserSignupForm() {
       },
       cookingLevel: "beginner",
       dietaryRestrictions: [],
-      favoriteFoods: [],
-      cuisinePreferences: [],
     },
     mode: "onBlur", // Changed from "onChange" to "onBlur"
   });
@@ -132,21 +124,17 @@ export default function UserSignupForm() {
     | "email"
     | "password"
     | "confirmPassword"
-    | "avatar"
     | "bio"
     | "cookingLevel"
     | "location.city"
     | "location.country"
-    | "dietaryRestrictions"
-    | "favoriteFoods"
-    | "cuisinePreferences";
+    | "dietaryRestrictions";
 
   const stepValidationFields: Record<number, FieldNames[]> = useMemo(
     () => ({
       1: ["name", "username", "email", "password", "confirmPassword"],
       2: ["bio", "location.city", "location.country"],
       3: ["cookingLevel", "dietaryRestrictions"],
-      4: ["favoriteFoods", "cuisinePreferences"],
     }),
     []
   );
@@ -191,103 +179,6 @@ export default function UserSignupForm() {
     };
   }, [debouncedValues, currentStep, validateStep]);
 
-  const cookingLevels = [
-    {
-      value: "beginner",
-      label: "🌱 Beginner",
-      desc: "Just starting my culinary journey",
-    },
-    {
-      value: "intermediate",
-      label: "👨‍🍳 Intermediate",
-      desc: "Comfortable with basic techniques",
-    },
-    { value: "advanced", label: "🎯 Advanced", desc: "Skilled home cook" },
-    {
-      value: "professional",
-      label: "⭐ Professional",
-      desc: "Industry experience",
-    },
-  ];
-
-  const dietaryOptions = [
-    "Vegetarian",
-    "Vegan",
-    "Gluten-Free",
-    "Dairy-Free",
-    "Keto",
-    "Paleo",
-    "Low-Carb",
-    "Low-Sodium",
-    "Nut-Free",
-    "Halal",
-    "Kosher",
-    "Raw Food",
-  ];
-
-  const cuisineOptions = [
-    "Italian",
-    "Chinese",
-    "Mexican",
-    "Indian",
-    "Japanese",
-    "French",
-    "Thai",
-    "Mediterranean",
-    "American",
-    "Korean",
-    "Spanish",
-    "Greek",
-    "Middle Eastern",
-    "Vietnamese",
-    "German",
-    "Turkish",
-    "Brazilian",
-    "Moroccan",
-  ];
-
-  const foodOptions = [
-    "Pizza",
-    "Pasta",
-    "Sushi",
-    "Tacos",
-    "Burgers",
-    "Salads",
-    "Seafood",
-    "Steak",
-    "Chicken",
-    "Vegetables",
-    "Desserts",
-    "Soups",
-    "Sandwiches",
-    "Rice Dishes",
-    "Noodles",
-    "BBQ",
-    "Spicy Food",
-    "Comfort Food",
-  ];
-
-  const countries = [
-    "United States",
-    "Canada",
-    "United Kingdom",
-    "Australia",
-    "Germany",
-    "France",
-    "Italy",
-    "Spain",
-    "Japan",
-    "South Korea",
-    "China",
-    "India",
-    "Brazil",
-    "Mexico",
-    "Argentina",
-    "Netherlands",
-    "Sweden",
-    "Norway",
-  ];
-
   const nextStep = async () => {
     const valid = await validateStep(currentStep);
     if (valid) {
@@ -299,13 +190,27 @@ export default function UserSignupForm() {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const onSubmit = (data: any) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (values: z.infer<typeof userSchema>) => {
+    try {
+      setStatus("loading");
+      setErrorMessage("");
+
+      await signup(values);
+
+      setStatus("idle");
+      // Optionally redirect or show success message
+    } catch (error: any) {
+      setStatus("error");
+      console.log("Submission error:", error);
+
+      setErrorMessage(String(error?.message));
+      console.error("Submission error:", error);
+    }
   };
 
   const renderStepIndicator = () => (
     <div className="flex items-center justify-center mb-8">
-      {[1, 2, 3, 4].map((step) => (
+      {[1, 2, 3].map((step) => (
         <div key={step} className="flex items-center">
           <div
             className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -317,9 +222,8 @@ export default function UserSignupForm() {
             {step === 1 && <User size={16} />}
             {step === 2 && <MapPin size={16} />}
             {step === 3 && <ChefHat size={16} />}
-            {step === 4 && <Heart size={16} />}
           </div>
-          {step < 4 && (
+          {step < 3 && (
             <div
               className={`w-12 h-1 mx-2 ${
                 currentStep > step ? "bg-orange-600" : "bg-gray-200"
@@ -461,7 +365,7 @@ export default function UserSignupForm() {
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
           <FormField
             control={form.control}
             name="location.city"
@@ -530,7 +434,7 @@ export default function UserSignupForm() {
                     onClick={() => field.onChange(level.value)}
                     className={`p-4 border rounded-lg cursor-pointer transition-all ${
                       field.value === level.value
-                        ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500"
+                        ? "border-orange-500 bg-orange-50 ring-2 ring-orange-500"
                         : "border-gray-300 hover:border-gray-400"
                     }`}
                   >
@@ -569,90 +473,11 @@ export default function UserSignupForm() {
                     }}
                     className={`p-2 text-sm border rounded-lg cursor-pointer transition-all ${
                       (field.value || []).includes(option)
-                        ? "border-blue-500 bg-blue-50 text-blue-700"
-                        : "border-gray-300 text-gray-700 hover:border-gray-400"
-                    }`}
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-    </div>
-  );
-
-  const renderStep4 = () => (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          Food Preferences
-        </h2>
-        <p className="text-gray-600">What do you love to eat and cook?</p>
-      </div>
-
-      <div className="space-y-6">
-        <FormField
-          control={form.control}
-          name="favoriteFoods"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Favorite Foods (Optional)</FormLabel>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {foodOptions.map((food) => (
-                  <div
-                    key={food}
-                    onClick={() => {
-                      const currentValues = field.value || [];
-                      const newValues = currentValues.includes(food)
-                        ? currentValues.filter((item: string) => item !== food)
-                        : [...currentValues, food];
-                      field.onChange(newValues);
-                    }}
-                    className={`p-2 text-sm border rounded-lg cursor-pointer transition-all ${
-                      (field.value || []).includes(food)
-                        ? "border-green-500 bg-green-50 text-green-700"
-                        : "border-gray-300 text-gray-700 hover:border-gray-400"
-                    }`}
-                  >
-                    {food}
-                  </div>
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="cuisinePreferences"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cuisine Preferences (Optional)</FormLabel>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                {cuisineOptions.map((cuisine) => (
-                  <div
-                    key={cuisine}
-                    onClick={() => {
-                      const currentValues = field.value || [];
-                      const newValues = currentValues.includes(cuisine)
-                        ? currentValues.filter(
-                            (item: string) => item !== cuisine
-                          )
-                        : [...currentValues, cuisine];
-                      field.onChange(newValues);
-                    }}
-                    className={`p-2 text-sm border rounded-lg cursor-pointer transition-all ${
-                      (field.value || []).includes(cuisine)
                         ? "border-orange-500 bg-orange-50 text-orange-700"
                         : "border-gray-300 text-gray-700 hover:border-gray-400"
                     }`}
                   >
-                    {cuisine}
+                    {option}
                   </div>
                 ))}
               </div>
@@ -673,7 +498,12 @@ export default function UserSignupForm() {
           {currentStep === 1 && renderStep1()}
           {currentStep === 2 && renderStep2()}
           {currentStep === 3 && renderStep3()}
-          {currentStep === 4 && renderStep4()}
+
+          <div className="flex items-center justify-center text-sm ">
+            {status === "error" && errorMessage && (
+              <p className="text-red-600">{errorMessage}</p>
+            )}
+          </div>
 
           <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
             <Button
@@ -687,7 +517,7 @@ export default function UserSignupForm() {
               Back
             </Button>
 
-            {currentStep < 4 ? (
+            {currentStep < 3 ? (
               <Button
                 type="button"
                 onClick={nextStep}
@@ -700,10 +530,11 @@ export default function UserSignupForm() {
             ) : (
               <Button
                 type="button"
+                disabled={!isStepValid || status === "loading"}
                 onClick={form.handleSubmit(onSubmit)}
-                className="bg-orange-600  hover:bg-orange-700 text-white"
+                className="bg-orange-600 cursor-pointer hover:bg-orange-700 text-white"
               >
-                Create Account
+                {status === "loading" ? "Creating Account" : " Create Account"}
               </Button>
             )}
           </div>
