@@ -32,7 +32,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState({
-    isLoading: false,
+    loading: false,
     error: "",
     success: false,
   });
@@ -50,18 +50,18 @@ const LoginForm = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      setStatus({ isLoading: true, error: "", success: false });
+      setStatus({ loading: true, error: "", success: false });
 
       await login(data);
       setStatus({
-        isLoading: false,
+        loading: false,
         error: "",
         success: true,
       });
     } catch (error) {
       console.error("Login error:", error);
       setStatus({
-        isLoading: false,
+        loading: false,
         error:
           error instanceof Error
             ? error.message
@@ -84,7 +84,7 @@ const LoginForm = () => {
                 <Input
                   type="email"
                   placeholder="Enter your email address"
-                  disabled={status.isLoading}
+                  disabled={status.loading}
                   {...field}
                 />
               </FormControl>
@@ -104,13 +104,13 @@ const LoginForm = () => {
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    disabled={status.isLoading}
+                    disabled={status.loading}
                     {...field}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    disabled={status.isLoading}
+                    disabled={status.loading}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 disabled:opacity-50"
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -138,7 +138,7 @@ const LoginForm = () => {
 
         <Button
           type="submit"
-          disabled={form.formState.isSubmitting || status.isLoading}
+          disabled={form.formState.isSubmitting || status.loading}
           className={`w-full h-[50px] cursor-pointer transition-all duration-200 bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-70 disabled:cursor-not-allowed`}
         >
           Sign In

@@ -30,7 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const accountSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   username: z.string().min(3, "Username must be at least 3 characters"),
-  bio: z.string().max(200, "Bio must be 200 characters or less").optional(),
+  bio: z.string().max(500, "Bio must be 500 characters or less").optional(),
   city: z.string().optional(),
   country: z.string().optional(),
 });
@@ -188,15 +188,15 @@ const MessagesPage = () => {
                         <Textarea
                           placeholder="Tell us about yourself..."
                           className="resize-none "
-                          rows={3}
-                          maxLength={200}
+                          rows={5}
+                          maxLength={500}
                           {...field}
                         />
                       </FormControl>
                       <div className="flex justify-between items-center">
                         <FormMessage />
                         <span className="text-xs text-gray-400">
-                          {field.value?.length || 0}/200
+                          {field.value?.length || 0}/500
                         </span>
                       </div>
                     </FormItem>

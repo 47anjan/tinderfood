@@ -89,8 +89,11 @@ function useDebounce(value: any, delay: number) {
 export default function UserSignupForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isStepValid, setIsStepValid] = useState(false);
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [status, setStatus] = useState({
+    loading: false,
+    error: "",
+    success: false,
+  });
 
   const { signup } = useAuth();
 
@@ -192,18 +195,23 @@ export default function UserSignupForm() {
 
   const onSubmit = async (values: z.infer<typeof userSchema>) => {
     try {
-      setStatus("loading");
-      setErrorMessage("");
+      setStatus({ loading: true, error: "", success: false });
 
       await signup(values);
 
-      setStatus("idle");
+      setStatus({ loading: false, error: "", success: true });
       // Optionally redirect or show success message
     } catch (error: any) {
-      setStatus("error");
       console.log("Submission error:", error);
 
-      setErrorMessage(String(error?.message));
+      setStatus({
+        loading: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+        success: false,
+      });
       console.error("Submission error:", error);
     }
   };
@@ -499,11 +507,19 @@ export default function UserSignupForm() {
           {currentStep === 2 && renderStep2()}
           {currentStep === 3 && renderStep3()}
 
-          <div className="flex items-center justify-center text-sm ">
-            {status === "error" && errorMessage && (
-              <p className="text-red-600">{errorMessage}</p>
-            )}
-          </div>
+          {status.error && (
+            <div className="p-3 bg-red-50 border flex items-center justify-center border-red-200 rounded-md">
+              <p className="text-red-600 text-sm">{status.error}</p>
+            </div>
+          )}
+
+          {status.success && (
+            <div className="p-3 bg-green-50 flex items-center justify-center border border-green-200 rounded-md">
+              <p className="text-green-600 text-sm">
+                Login successful! Redirecting...
+              </p>
+            </div>
+          )}
 
           <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
             <Button
@@ -530,11 +546,11 @@ export default function UserSignupForm() {
             ) : (
               <Button
                 type="button"
-                disabled={!isStepValid || status === "loading"}
+                disabled={!isStepValid || status.loading}
                 onClick={form.handleSubmit(onSubmit)}
                 className="bg-orange-600 cursor-pointer hover:bg-orange-700 text-white"
               >
-                {status === "loading" ? "Creating Account" : " Create Account"}
+                {status.loading ? "Creating Account" : " Create Account"}
               </Button>
             )}
           </div>
