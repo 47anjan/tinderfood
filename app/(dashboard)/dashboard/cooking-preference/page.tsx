@@ -92,8 +92,8 @@ const CookingPreference = () => {
           }}
           className={`px-3 py-1 cursor-pointer text-sm rounded-full border transition-all ${
             (value || []).includes(option)
-              ? `${colorClass} border-orange-600 text-orange-700`
-              : "border-gray-300 text-gray-600 hover:border-gray-400"
+              ? `${colorClass} border-orange-600 border-2 text-orange-700`
+              : "border-gray-300 text-gray-600 border-2 hover:border-gray-400"
           }`}
         >
           {option}
@@ -155,8 +155,8 @@ const CookingPreference = () => {
                             className={`p-3
                                cursor-pointer border rounded-lg text-sm font-medium transition-all ${
                                  field.value === level.value
-                                   ? "border-orange-600 bg-orange-50 text-orange-700"
-                                   : "border-gray-200 text-gray-600 hover:border-gray-300"
+                                   ? "border-orange-600 border-2 bg-orange-50 text-orange-700"
+                                   : "border-gray-200 border-2 text-gray-600 hover:border-gray-300"
                                }`}
                           >
                             {level.label}
