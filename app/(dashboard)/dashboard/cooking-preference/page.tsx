@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import {
+  BASE_URL,
   cookingLevels,
   cuisineOptions,
   dietaryOptions,
@@ -67,10 +68,21 @@ const CookingPreference = () => {
     setIsSubmitting(true);
     try {
       console.log("Cooking preferences updated:", data);
-      alert("Cooking preferences updated successfully!");
+
+      const response = await fetch(`${BASE_URL}/api/profile/edit`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+
+      const result = await response.json();
+
+      console.log(result);
     } catch (error) {
       console.error("Error updating cooking preferences:", error);
-      alert("Failed to update cooking preferences. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { useAuth } from "@/contexts/auth-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BASE_URL } from "@/lib/constants";
 
 // Account Form Schema
 const accountSchema = z.object({
@@ -83,10 +84,31 @@ const MessagesPage = () => {
     setIsSubmitting(true);
     try {
       console.log("Account updated:", data);
-      alert("Account information updated successfully!");
+
+      const profileData = {
+        name: data.name,
+        username: data.username,
+        bio: data.bio,
+        location: {
+          city: data.city,
+          country: data.country,
+        },
+      };
+
+      const response = await fetch(`${BASE_URL}/api/profile/edit`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profileData),
+        credentials: "include",
+      });
+
+      const result = await response.json();
+
+      console.log(result);
     } catch (error) {
       console.error("Error updating account:", error);
-      alert("Failed to update account. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
