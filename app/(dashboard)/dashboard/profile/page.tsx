@@ -46,11 +46,11 @@ const MessagesPage = () => {
   const form = useForm<AccountFormData>({
     resolver: zodResolver(accountSchema),
     defaultValues: {
-      name: "",
-      username: "",
-      bio: "",
-      city: "",
-      country: "",
+      name: user?.name || "",
+      username: user?.username || "",
+      bio: user?.bio || "",
+      city: user?.location?.city || "",
+      country: user?.location?.country || "",
     },
     mode: "onChange",
   });
