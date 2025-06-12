@@ -86,6 +86,7 @@ const LoginForm = () => {
                   placeholder="Enter your email address"
                   disabled={status.loading}
                   {...field}
+                  autoComplete="username"
                 />
               </FormControl>
               <FormMessage />
@@ -106,6 +107,7 @@ const LoginForm = () => {
                     placeholder="Enter your password"
                     disabled={status.loading}
                     {...field}
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"

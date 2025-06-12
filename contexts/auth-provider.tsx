@@ -159,11 +159,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         credentials: "include",
       });
 
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Logout failed");
-      }
-      router.push("/");
+      await response.json();
+
+      router.push("/login");
     } catch (err) {
       console.log(err);
       throw err;
