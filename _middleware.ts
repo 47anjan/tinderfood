@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
     // If user is already logged in and trying to access login/signup pages
     if (isAuthRoute && isLoggedIn) {
       console.log("Redirecting logged-in user away from auth pages");
-      return NextResponse.redirect(new URL("/dashboard", request.url)); // Changed from "/" to "/dashboard"
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
     console.log("Middleware - Allowing access to:", path);

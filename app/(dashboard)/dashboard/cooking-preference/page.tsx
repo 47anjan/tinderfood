@@ -38,7 +38,7 @@ const cookingPreferencesSchema = z.object({
 type CookingPreferencesFormData = z.infer<typeof cookingPreferencesSchema>;
 
 const CookingPreference = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -141,135 +141,137 @@ const CookingPreference = () => {
             </div>
           </div>
 
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="p-6 space-y-6"
-            >
-              {/* Cooking Level */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <ChefHat size={16} className="text-orange-600" />
-                  <h3 className="font-medium text-gray-900">Cooking Level</h3>
-                </div>
+          {user && !loading && (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="p-6 space-y-6"
+              >
+                {/* Cooking Level */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <ChefHat size={16} className="text-orange-600" />
+                    <h3 className="font-medium text-gray-900">Cooking Level</h3>
+                  </div>
 
-                <FormField
-                  control={form.control}
-                  name="cookingLevel"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {cookingLevels.map((level) => (
-                          <button
-                            key={level.value}
-                            type="button"
-                            onClick={() => field.onChange(level.value)}
-                            className={`p-3
+                  <FormField
+                    control={form.control}
+                    name="cookingLevel"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          {cookingLevels.map((level) => (
+                            <button
+                              key={level.value}
+                              type="button"
+                              onClick={() => field.onChange(level.value)}
+                              className={`p-3
                                cursor-pointer border rounded-lg text-sm font-medium transition-all ${
                                  field.value === level.value
                                    ? "border-orange-600 border-2 bg-orange-50 text-orange-700"
                                    : "border-gray-200 border-2 text-gray-600 hover:border-gray-300"
                                }`}
-                          >
-                            {level.label}
-                          </button>
-                        ))}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/* Preferences */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Heart size={16} className="text-orange-600" />
-                  <h3 className="font-medium text-gray-900">
-                    Food Preferences
-                  </h3>
+                            >
+                              {level.label}
+                            </button>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
-                <FormField
-                  control={form.control}
-                  name="dietaryRestrictions"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Dietary Restrictions
-                      </FormLabel>
-                      <TagSelector
-                        options={dietaryOptions}
-                        value={field.value}
-                        onChange={field.onChange}
-                        colorClass="bg-orange-50"
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {/* Preferences */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Heart size={16} className="text-orange-600" />
+                    <h3 className="font-medium text-gray-900">
+                      Food Preferences
+                    </h3>
+                  </div>
 
-                <FormField
-                  control={form.control}
-                  name="cuisinePreferences"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Favorite Cuisines
-                      </FormLabel>
-                      <TagSelector
-                        options={cuisineOptions}
-                        value={field.value}
-                        onChange={field.onChange}
-                        colorClass="bg-orange-50"
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="dietaryRestrictions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700">
+                          Dietary Restrictions
+                        </FormLabel>
+                        <TagSelector
+                          options={dietaryOptions}
+                          value={field.value}
+                          onChange={field.onChange}
+                          colorClass="bg-orange-50"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="favoriteFoods"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Favorite Foods
-                      </FormLabel>
-                      <TagSelector
-                        options={foodOptions}
-                        value={field.value}
-                        onChange={field.onChange}
-                        colorClass="bg-orange-50"
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                  <FormField
+                    control={form.control}
+                    name="cuisinePreferences"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700">
+                          Favorite Cuisines
+                        </FormLabel>
+                        <TagSelector
+                          options={cuisineOptions}
+                          value={field.value}
+                          onChange={field.onChange}
+                          colorClass="bg-orange-50"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Submit Button */}
-              <div className="pt-4 border-t border-gray-50">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full h-[50px] cursor-pointer transition-all duration-200 bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-70 disabled:cursor-not-allowed`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Saving Preferences...
-                    </>
-                  ) : (
-                    <>
-                      <Save size={16} className="mr-2" />
-                      Save Cooking Preferences
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
+                  <FormField
+                    control={form.control}
+                    name="favoriteFoods"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700">
+                          Favorite Foods
+                        </FormLabel>
+                        <TagSelector
+                          options={foodOptions}
+                          value={field.value}
+                          onChange={field.onChange}
+                          colorClass="bg-orange-50"
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-4 border-t border-gray-50">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`w-full h-[50px] cursor-pointer transition-all duration-200 bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-70 disabled:cursor-not-allowed`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        Saving Preferences...
+                      </>
+                    ) : (
+                      <>
+                        <Save size={16} className="mr-2" />
+                        Save Cooking Preferences
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          )}
         </div>
       </div>
     </div>

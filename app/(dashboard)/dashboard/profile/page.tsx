@@ -150,160 +150,162 @@ const MessagesPage = () => {
             </div>
           </div>
 
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="p-6 space-y-6"
-            >
-              {/* Basic Info */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <User size={16} className="text-orange-600" />
-                  <h3 className="font-medium text-gray-900">
-                    Basic Information
-                  </h3>
-                </div>
+          {user && !loading && (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="p-6 space-y-6"
+              >
+                {/* Basic Info */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <User size={16} className="text-orange-600" />
+                    <h3 className="font-medium text-gray-900">
+                      Basic Information
+                    </h3>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Full Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your full name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Username
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Unique username" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="bio"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700">
-                        Bio
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Tell us about yourself..."
-                          className="resize-none "
-                          rows={5}
-                          maxLength={500}
-                          {...field}
-                        />
-                      </FormControl>
-                      <div className="flex justify-between items-center">
-                        <FormMessage />
-                        <span className="text-xs text-gray-400">
-                          {field.value?.length || 0}/500
-                        </span>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/* Location */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <MapPin size={16} className="text-orange-600" />
-                  <h3 className="font-medium text-gray-900">Location</h3>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="city"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          City
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Your city" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="country"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Country
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Full Name
+                          </FormLabel>
                           <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select country" />
-                            </SelectTrigger>
+                            <Input placeholder="Your full name" {...field} />
                           </FormControl>
-                          <SelectContent>
-                            {countries.map((country) => (
-                              <SelectItem key={country} value={country}>
-                                {country}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Username
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="Unique username" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="bio"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700">
+                          Bio
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell us about yourself..."
+                            className="resize-none "
+                            rows={5}
+                            maxLength={500}
+                            {...field}
+                          />
+                        </FormControl>
+                        <div className="flex justify-between items-center">
+                          <FormMessage />
+                          <span className="text-xs text-gray-400">
+                            {field.value?.length || 0}/500
+                          </span>
+                        </div>
                       </FormItem>
                     )}
                   />
                 </div>
-              </div>
 
-              {/* Submit Button */}
-              <div className="pt-4 border-t border-gray-50">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full h-[50px] cursor-pointer transition-all duration-200 bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-70 disabled:cursor-not-allowed`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Saving Account...
-                    </>
-                  ) : (
-                    <>
-                      <Save size={16} className="mr-2" />
-                      Save Account Information
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
+                {/* Location */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <MapPin size={16} className="text-orange-600" />
+                    <h3 className="font-medium text-gray-900">Location</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            City
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="Your city" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="country"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">
+                            Country
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select country" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {countries.map((country) => (
+                                <SelectItem key={country} value={country}>
+                                  {country}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-4 border-t border-gray-50">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`w-full h-[50px] cursor-pointer transition-all duration-200 bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-70 disabled:cursor-not-allowed`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        Saving Account...
+                      </>
+                    ) : (
+                      <>
+                        <Save size={16} className="mr-2" />
+                        Save Account Information
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          )}
         </div>
       </div>
     </div>
