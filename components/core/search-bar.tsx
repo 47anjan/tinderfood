@@ -45,10 +45,10 @@ export function SearchBar() {
 
       if (keyCode === 13) {
         if (activeIndex !== -1) {
-          router.push(`/search?query=${data.data[activeIndex].title}`);
+          router.push(`search/recipes?query=${data.data[activeIndex].title}`);
           resetActiveIndex();
         } else {
-          router.push(`/search?query=${searchQuery}`);
+          router.push(`search/recipes?query=${searchQuery}`);
         }
       }
 
@@ -128,7 +128,7 @@ export function SearchBar() {
               </div>
               {popularFoodSearches.map((item, index) => (
                 <Link
-                  href={`/search?query=${item}`}
+                  href={`search/recipes?query=${item}`}
                   className={cn(
                     "flex group items-center gap-3 px-2 py-2 mx-1 rounded-lg transition-all duration-200  relative overflow-hidden cursor-pointer",
                     "text-slate-700 hover:bg-gradient-to-r hover:from-orange-500 hover:to-rose-500 hover:shadow-md hover:scale-[1.01] hover:translate-x-1 hover:text-white hover:border-orange-200 "
@@ -212,7 +212,7 @@ export function SearchBar() {
                   </div>
                   {data.data.map((item, index) => (
                     <Link
-                      href={`/search?query=${item.title}`}
+                      href={`search/recipes?query=${item.title}`}
                       className={cn(
                         "flex items-center gap-3 px-2 py-2 mx-1 rounded-lg transition-all duration-200 group relative overflow-hidden cursor-pointer",
                         index === activeIndex
