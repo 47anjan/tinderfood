@@ -47,8 +47,10 @@ export function SearchBar() {
         if (activeIndex !== -1) {
           router.push(`/search/recipes?query=${data.data[activeIndex].title}`);
           resetActiveIndex();
+          setOpen(false);
         } else {
           router.push(`/search/recipes?query=${searchQuery}`);
+          setOpen(false);
         }
       }
 
