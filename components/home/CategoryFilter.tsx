@@ -31,7 +31,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               <button
                 className={`px-4 cursor-pointer py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
                   selectedCategory === category
-                    ? "bg-orange-500 text-white"
+                    ? "bg-gradient-to-r from-orange-500 to-rose-500 text-white"
                     : "bg-orange-200 hover:text-white text-orange-800 hover:bg-orange-500"
                 }`}
                 onClick={() => onSelectCategory(category)}
