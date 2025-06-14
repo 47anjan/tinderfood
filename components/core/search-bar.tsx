@@ -93,7 +93,7 @@ export function SearchBar() {
           className="relative h-11 w-full justify-start rounded-xl border-slate-200 bg-white px-4 text-sm text-slate-500 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md focus:border-orange-400 focus:ring-2 focus:ring-orange-100 md:pr-14"
           onClick={() => setOpen(true)}
         >
-          <Search className="mr-3 h-4 w-4 text-slate-400" />
+          <Search className="md:mr-3 h-4 w-4 text-slate-400" />
           <span className="hidden md:block font-medium">Search recipes...</span>
           <kbd className="pointer-events-none absolute right-2 top-2 hidden h-7 select-none items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 font-mono text-xs font-medium text-slate-400 md:flex">
             <span className="text-xs">⌘</span>K
