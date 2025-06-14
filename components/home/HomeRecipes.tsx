@@ -13,6 +13,17 @@ import { cn } from "@/lib/utils";
 
 const HomeRecipes = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(menus[0]);
+  const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+
+  // Demo fallback image - a food placeholder
+  const demoImage =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23f8fafc'/%3E%3Cg transform='translate(200 100)'%3E%3Ccircle cx='0' cy='0' r='40' fill='%23e2e8f0'/%3E%3Cpath d='M-25-10h50v5h-50z' fill='%23cbd5e1'/%3E%3Cpath d='M-20-5h40v3h-40z' fill='%23cbd5e1'/%3E%3Cpath d='M-15 0h30v3h-30z' fill='%23cbd5e1'/%3E%3Cpath d='M-10 5h20v3h-20z' fill='%23cbd5e1'/%3E%3C/g%3E%3Ctext x='200' y='130' text-anchor='middle' font-family='system-ui' font-size='14' fill='%2364748b'%3ERecipe Image%3C/text%3E%3C/svg%3E";
+
+  const handleImageError = (recipeId: string) => {
+    setImageErrors((prev) => ({ ...prev, [recipeId]: true }));
+  };
 
   const {
     isFetchingNextPage,
@@ -155,12 +166,17 @@ const HomeRecipes = () => {
                         {recipe.image && (
                           <>
                             <img
-                              src={recipe?.image}
+                              src={
+                                imageErrors[recipe.id]
+                                  ? demoImage
+                                  : recipe?.image
+                              }
                               loading="lazy"
                               className="w-full h-full object-cover transition-all duration-700 group-hover:brightness-110"
                               width={400}
                               height={200}
                               alt={recipe.title}
+                              onError={() => handleImageError(recipe.id)}
                             />
 
                             {/* Gradient overlay */}

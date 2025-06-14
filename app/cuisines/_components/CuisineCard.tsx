@@ -1,14 +1,21 @@
+"use client";
 import { SearchRecipe } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import { Star, Heart, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface Props {
   recipe: SearchRecipe;
 }
 
 const CuisineCard = ({ recipe }: Props) => {
+  const [imageError, setImageError] = useState(false);
+
+  // Demo fallback image - a food placeholder
+  const demoImage =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='312' height='208' viewBox='0 0 312 208'%3E%3Crect width='312' height='208' fill='%23f8fafc'/%3E%3Cg transform='translate(156 104)'%3E%3Ccircle cx='0' cy='0' r='32' fill='%23e2e8f0'/%3E%3Cpath d='M-20-8h40v4h-40z' fill='%23cbd5e1'/%3E%3Cpath d='M-16-4h32v2h-32z' fill='%23cbd5e1'/%3E%3Cpath d='M-12 0h24v2h-24z' fill='%23cbd5e1'/%3E%3Cpath d='M-8 4h16v2h-16z' fill='%23cbd5e1'/%3E%3C/g%3E%3Ctext x='156' y='130' text-anchor='middle' font-family='system-ui' font-size='12' fill='%2364748b'%3ERecipe Image%3C/text%3E%3C/svg%3E";
   return (
     <Link
       href={`/recipes/${recipe.id}`}
@@ -21,12 +28,13 @@ const CuisineCard = ({ recipe }: Props) => {
       {/* Image container with enhanced overlay effects */}
       <div className="relative h-52 overflow-hidden">
         <Image
-          src={recipe?.image}
+          src={imageError ? demoImage : recipe?.image}
           loading="lazy"
           className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 will-change-transform"
           width={312}
           height={208}
           alt={recipe.title}
+          onError={() => setImageError(true)}
         />
 
         {/* Multiple gradient overlays for depth */}
@@ -54,7 +62,7 @@ const CuisineCard = ({ recipe }: Props) => {
         </div>
 
         {/* Recipe title overlay */}
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="absolute bottom-4 left-4 right-4   transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
           <h3 className="text-white  leading-tight line-clamp-2 drop-shadow-lg">
             {recipe.title}
           </h3>
