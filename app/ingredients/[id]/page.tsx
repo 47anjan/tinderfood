@@ -110,7 +110,7 @@ const IngredientInformation = async ({ params, searchParams }: Params) => {
 
         <div className="space-y-12">
           {/* Header Section */}
-          <header className="space-y-6 pb-8 border-b border-gradient-to-r from-orange-200/30 to-rose-200/30 relative border-gray-200">
+          <header className="space-y-6 pb-8 border-b border-gradient-to-r from-orange-200/30 to-rose-200/30 relative border-orange-200">
             <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-orange-300/40 to-transparent"></div>
 
             <div className="grid lg:grid-cols-[400px_1fr] gap-8 items-start">

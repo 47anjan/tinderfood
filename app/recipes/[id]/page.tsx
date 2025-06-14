@@ -90,7 +90,7 @@ const RecipeInformation = async ({ params }: Params) => {
       <section className="relative max-w-[1036px] mx-auto px-4 py-8">
         <div className="space-y-12">
           {/* Enhanced Header */}
-          <header className="space-y-6 pb-8 border-b border-gradient-to-r from-orange-200/30 to-rose-200/30 relative border-gray-200">
+          <header className="space-y-6 pb-8 border-b border-gradient-to-r from-orange-200 to-rose-300 relative border-orange-200 ">
             <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-orange-300/40 to-transparent"></div>
 
             <div className="flex justify-between items-start gap-4">
