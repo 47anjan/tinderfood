@@ -53,6 +53,13 @@ const CuisineCard = ({ recipe }: Props) => {
           </div>
         </div>
 
+        {/* Recipe title overlay */}
+        <div className="absolute bottom-4 left-4 right-4">
+          <h3 className="text-white  leading-tight line-clamp-2 drop-shadow-lg">
+            {recipe.title}
+          </h3>
+        </div>
+
         {/* Shimmer effect overlay */}
         <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent transform skew-x-12"></div>
       </div>

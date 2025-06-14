@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export const popularFoodSearches = [
-  "pizza",
+  "tomato",
   "pasta",
   "burger",
   "tacos",
