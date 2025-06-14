@@ -176,7 +176,7 @@ const HomeRecipes = () => {
                               width={400}
                               height={200}
                               alt={recipe.title}
-                              onError={() => handleImageError(recipe.id)}
+                              onError={() => handleImageError(`${recipe.id}`)}
                             />
 
                             {/* Gradient overlay */}

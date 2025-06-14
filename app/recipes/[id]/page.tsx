@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import Header from "@/components/home/Header";
 import { API_KEY, BASE_URL_FOOD } from "@/lib/constants";
 import { RecipeDetails } from "@/lib/types";
@@ -26,14 +24,13 @@ const getRecipeInformation = cache(
   }
 );
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
-const RecipeInformation = async ({ params }: Params) => {
-  const recipe = await getRecipeInformation(params.id);
+const RecipeInformation = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const recipe = await getRecipeInformation(id);
 
   if (recipe && "code" in recipe && recipe.code === 402) {
     return (
@@ -213,6 +210,7 @@ const RecipeInformation = async ({ params }: Params) => {
                           "Carbohydrates",
                         ].includes(n.name)
                       )
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       .map((nutrient: any) => (
                         <div
                           key={nutrient.name}

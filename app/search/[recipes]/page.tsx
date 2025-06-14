@@ -10,14 +10,30 @@ import { Search, AlertCircle, ChefHat, Sparkles, Coffee } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CuisineCard from "@/app/cuisines/_components/CuisineCard";
 import Header from "@/components/home/Header";
+import { useEffect, useState } from "react";
 
 interface Params {
-  searchParams: {
-    query: string;
-  };
+  searchParams: Promise<{ query?: string }>;
 }
 
 const SearchPage = ({ searchParams }: Params) => {
+  const [resolvedSearchParams, setResolvedSearchParams] = useState<{
+    query?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const resolveParams = async () => {
+      try {
+        const resolvedSP = await searchParams;
+        setResolvedSearchParams(resolvedSP);
+      } catch {
+        console.log("Failed to resolve parameters");
+      }
+    };
+
+    resolveParams();
+  }, [searchParams]);
+
   const {
     data,
     isLoading,
@@ -26,7 +42,7 @@ const SearchPage = ({ searchParams }: Params) => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteSearch({
-    query: searchParams.query,
+    query: resolvedSearchParams?.query,
   });
 
   const allResults = data?.pages.flatMap((page) => page.results) || [];
@@ -127,7 +143,7 @@ const SearchPage = ({ searchParams }: Params) => {
             <p className="text-lg text-slate-600 leading-relaxed mb-6">
               We couldn&apos;t find any recipes matching{" "}
               <span className="font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded-lg">
-                &quot;{searchParams.query}&quot;
+                &quot;{resolvedSearchParams?.query}&quot;
               </span>
             </p>
 
@@ -199,7 +215,7 @@ const SearchPage = ({ searchParams }: Params) => {
                   </span>{" "}
                   recipes for{" "}
                   <span className="font-semibold text-slate-800">
-                    &quot;{searchParams.query}&quot;
+                    &quot;{resolvedSearchParams?.query}&quot;
                   </span>
                 </span>
               </div>

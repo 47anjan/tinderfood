@@ -25,10 +25,10 @@ const getIngredientInformation = cache(
 );
 
 interface Params {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: { recipeId: string };
+  }>;
+  searchParams: Promise<{ recipeId?: string }>;
 }
 
 const NutritionItem = ({ nutrient }: { nutrient: any }) => {
@@ -65,7 +65,10 @@ const NutritionItem = ({ nutrient }: { nutrient: any }) => {
 };
 
 const IngredientInformation = async ({ params, searchParams }: Params) => {
-  const ingredient = await getIngredientInformation(params.id);
+  const { id } = await params;
+  const { recipeId } = await searchParams;
+
+  const ingredient = await getIngredientInformation(id);
 
   const sortedNutrients = [...ingredient.nutrition.nutrients].sort((a, b) => {
     if (a.unit === "kcal" && b.unit !== "kcal") return -1;
@@ -96,10 +99,10 @@ const IngredientInformation = async ({ params, searchParams }: Params) => {
 
       <div className="relative max-w-6xl mx-auto px-4 py-8">
         {/* Back Navigation */}
-        {searchParams.recipeId && (
+        {recipeId && (
           <div className="mb-8">
             <Link
-              href={`/recipes/${searchParams.recipeId}`}
+              href={`/recipes/${recipeId}`}
               className="group inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-white/80 to-white/60 backdrop-blur-sm text-slate-600 hover:text-orange-600 rounded-full border border-white/50 hover:border-orange-200/50 shadow hover:shadow-orange-500/10 transition-all duration-300"
             >
               <IoArrowBack className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
