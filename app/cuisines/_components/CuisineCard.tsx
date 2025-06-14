@@ -1,6 +1,8 @@
 import { SearchRecipe } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
+import { Star, Heart, ChefHat } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   recipe: SearchRecipe;
@@ -10,28 +12,84 @@ const CuisineCard = ({ recipe }: Props) => {
   return (
     <Link
       href={`/recipes/${recipe.id}`}
-      className="rounded-2xl group h-52 overflow-hidden relative isolate"
+      className={cn(
+        "group relative block rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.02]",
+        "bg-white/80 backdrop-blur-sm border border-slate-200/50 shadow-sm hover:shadow-2xl hover:shadow-orange-500/10",
+        "hover:border-orange-200/50 hover:bg-white/90 transform-gpu"
+      )}
     >
-      <Image
-        src={recipe?.image}
-        loading="lazy"
-        className="w-full will-change-transform h-[208px] md:group-hover:scale-105  group-hover:brightness-110  transition-all object-cover duration-300 "
-        width={312}
-        height={208}
-        alt=""
-      />
-      <div
-        style={{
-          background:
-            "linear-gradient(rgba(27, 30, 36, 0) 0%, rgba(27, 30, 36,.5) 90%)",
-        }}
-        className="bg-gradient-to-b  object-cover left-0 right-0 bottom-0 px-2 pb-2 flex items-end z-10 h-20 absolute "
-      >
-        <h4 className="text-base leading-5  font-medium text-white line-clamp-2">
-          {recipe.title}
-        </h4>
+      {/* Image container with enhanced overlay effects */}
+      <div className="relative h-52 overflow-hidden">
+        <Image
+          src={recipe?.image}
+          loading="lazy"
+          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 will-change-transform"
+          width={312}
+          height={208}
+          alt={recipe.title}
+        />
+
+        {/* Multiple gradient overlays for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+        {/* Floating action indicators */}
+        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <div className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-colors duration-200">
+            <Heart className="h-4 w-4 text-rose-500 hover:fill-rose-500 transition-all duration-200" />
+          </div>
+          <div className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg">
+            <Star className="h-4 w-4 text-orange-500" />
+          </div>
+        </div>
+
+        {/* Recipe type badge */}
+        <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0">
+          <div className="bg-gradient-to-r from-orange-500 to-rose-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm">
+            <div className="flex items-center gap-1">
+              <ChefHat className="h-3 w-3" />
+              <span>Recipe</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Shimmer effect overlay */}
+        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent transform skew-x-12"></div>
       </div>
+
+      {/* Card bottom section with additional info */}
+      <div className="p-4 bg-gradient-to-r from-white/95 to-white/90 backdrop-blur-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-gradient-to-r from-orange-500 to-rose-500 rounded-full animate-pulse"></div>
+            <span className="text-sm text-nowrap text-slate-600 ">
+              Ready to cook
+            </span>
+          </div>
+
+          <div className="flex will-change-transform items-center gap-1 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="text-xs">View</span>
+            <svg
+              className="h-3 w-3  will-change-transform transform group-hover:translate-x-1 transition-transform duration-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Hover glow effect */}
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500/20 to-rose-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-sm"></div>
     </Link>
   );
 };
+
 export default CuisineCard;
