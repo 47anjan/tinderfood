@@ -1,4 +1,6 @@
 import Header from "@/components/home/Header";
+import { describeTitle } from "@/lib/actions";
+
 import { API_KEY, BASE_URL_FOOD } from "@/lib/constants";
 import { RecipeDetails } from "@/lib/types";
 import Image from "next/image";
@@ -31,6 +33,7 @@ const RecipeInformation = async ({
 }) => {
   const { id } = await params;
   const recipe = await getRecipeInformation(id);
+  const summarizeTitle = await describeTitle(recipe.title);
 
   if (recipe && "code" in recipe && recipe.code === 402) {
     return (
@@ -92,9 +95,12 @@ const RecipeInformation = async ({
 
             <div className="flex justify-between items-start gap-4">
               <div className="space-y-4 flex-1">
-                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 bg-clip-text text-transparent leading-tight">
-                  {recipe.title}
-                </h1>
+                <div>
+                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 bg-clip-text text-transparent leading-tight">
+                    {recipe.title}
+                  </h1>
+                  <h4 className="text-gray-500">{summarizeTitle}</h4>
+                </div>
 
                 {/* Quick stats bar */}
                 <div className="flex flex-wrap items-center gap-6 text-sm">
