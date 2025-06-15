@@ -1,3 +1,4 @@
+import RecipeChat from "@/components/ai-chat/RecipeChat";
 import Header from "@/components/home/Header";
 import { describeTitle } from "@/lib/actions";
 
@@ -162,6 +163,9 @@ const RecipeInformation = async ({
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
+                </div>
+                <div>
+                  <RecipeChat recipe={recipe} />
                 </div>
               </div>
 
