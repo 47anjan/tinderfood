@@ -121,7 +121,7 @@ const IngredientInformation = async ({ params, searchParams }: Params) => {
               <div className="space-y-4">
                 <div className="relative group">
                   <div className="absolute -inset-4 bg-gradient-to-r from-orange-500/20 to-rose-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
-                  <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/50 shadow shadow-orange-500/10 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-xl">
+                  <div className="relative overflow-hidden rounded-2xl border border-white/50 shadow shadow-orange-500/10 bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-xl">
                     <div className="absolute inset-0 bg-gradient-to-br from-orange-50/30 to-rose-50/30"></div>
                     <div className="relative p-8 flex items-center justify-center">
                       {ingredient.image ? (
@@ -129,7 +129,7 @@ const IngredientInformation = async ({ params, searchParams }: Params) => {
                           width={300}
                           height={300}
                           src={`https://spoonacular.com/cdn/ingredients_250x250/${ingredient.image}`}
-                          className="object-contain w-full h-full transition-transform duration-700 group-hover:scale-110"
+                          className="object-contain w-full h-full transition-transform duration-700 group-hover:scale-105"
                           alt={ingredient.name}
                         />
                       ) : null}
