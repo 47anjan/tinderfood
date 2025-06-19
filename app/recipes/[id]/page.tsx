@@ -282,7 +282,7 @@ const RecipeInformation = async ({
                         </p>
                       </div>
                       <div className="relative">
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center border-4 border-blue-200/50 shadow-lg">
+                        <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center border-4 border-blue-200/50 ">
                           <span className="text-blue-600 font-bold text-xl">
                             {recipe.spoonacularScore.toFixed()}%
                           </span>
