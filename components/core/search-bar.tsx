@@ -92,7 +92,13 @@ export function SearchBar() {
       <div className="relative  flex w-full max-w-md items-center">
         <Button
           variant="outline"
-          className="relative h-11 w-full justify-start rounded-xl border-slate-200 bg-white px-4 text-sm text-slate-500 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md focus:border-orange-400 focus:ring-2 focus:ring-orange-100 md:pr-14"
+          className={cn(
+            "relative h-11 cursor-pointer w-full justify-start group  flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 md:pr-14",
+
+            "bg-slate-50  hover:bg-gradient-to-r hover:from-orange-50 hover:to-rose-50 border border-slate-200/80",
+            "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:bg-gradient-to-r focus:from-orange-50 focus:to-rose-50",
+            "hover:border-orange-200/60 "
+          )}
           onClick={() => setOpen(true)}
         >
           <Search className="md:mr-3 h-4 w-4 text-slate-400" />
