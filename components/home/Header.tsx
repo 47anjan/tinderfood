@@ -79,7 +79,7 @@ const Header = () => {
               size={16}
               className="text-slate-600 transition-colors duration-300 group-hover:text-orange-600"
             />
-            <span className="text-sm font-medium text-slate-700 transition-colors duration-300 group-hover:text-orange-600 hidden sm:inline-block">
+            <span className="text-sm hidden  font-medium text-slate-700 transition-colors duration-300 group-hover:text-orange-600  sm:inline-block">
               Login
             </span>
           </Link>
