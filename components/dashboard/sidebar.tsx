@@ -43,14 +43,20 @@ export function Sidebar() {
       >
         {/* Mobile header */}
         <div className="flex h-16 items-center justify-between px-6 border-b border-slate-200/80">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-orange-100 to-rose-100">
-              <ChefHat size={20} className="text-orange-600" />
+          <div className="flex items-center gap-3 ml-0 lg:ml-0">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-orange-100 to-rose-100 ">
+              <ChefHat size={18} className="text-orange-600" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-              TinderFood
-            </span>
+            <div className="flex flex-col">
+              <h1 className="text-lg font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent leading-tight">
+                TinderFood
+              </h1>
+              <span className="text-xs text-slate-500 leading-tight hidden sm:block">
+                Dashboard
+              </span>
+            </div>
           </div>
+
           <button
             type="button"
             className={cn(
@@ -73,7 +79,7 @@ export function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "group relative flex items-center gap-4 rounded-xl px-4 py-3 transition-all duration-200",
+                  "group relative flex items-center gap-4 rounded-xl px-3 py-3 transition-all duration-200",
                   isActive
                     ? "bg-gradient-to-r from-orange-50 to-rose-50 text-orange-600 shadow-sm border border-orange-200/50"
                     : "text-slate-700 hover:bg-slate-50 hover:text-orange-600"
@@ -125,22 +131,27 @@ export function Sidebar() {
               {/* Desktop header */}
               <div
                 className={cn(
-                  "flex h-20 flex-shrink-0 items-center px-6",
+                  "flex h-[65px] flex-shrink-0 items-center px-6",
                   "border-b border-slate-200/80 bg-gradient-to-r from-orange-500/[0.02] to-rose-500/[0.02]"
                 )}
               >
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-gradient-to-br from-orange-100 to-rose-100 shadow-sm">
-                    <ChefHat size={22} className="text-orange-600" />
+                <div className="flex items-center gap-3 ml-0 lg:ml-0">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-orange-100 to-rose-100 shadow-sm">
+                    <ChefHat size={18} className="text-orange-600" />
                   </div>
-                  <span className="text-xl font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent">
-                    TinderFood
-                  </span>
+                  <div className="flex flex-col">
+                    <h1 className="text-lg font-bold bg-gradient-to-r from-orange-500 to-rose-500 bg-clip-text text-transparent leading-tight">
+                      TinderFood
+                    </h1>
+                    <span className="text-xs text-slate-500 leading-tight hidden sm:block">
+                      Dashboard
+                    </span>
+                  </div>
                 </div>
               </div>
 
               {/* Desktop navigation */}
-              <nav className="flex-1 px-4 py-6 space-y-2">
+              <nav className="flex-1 px-4 py-4 space-y-2">
                 <div className="mb-6">
                   <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3">
                     Dashboard
@@ -154,7 +165,7 @@ export function Sidebar() {
                       key={item.name}
                       href={item.href}
                       className={cn(
-                        "group relative flex items-center gap-4 rounded-xl px-4 py-3.5 transition-all duration-200",
+                        "group relative flex items-center gap-4 rounded-xl px-3 py-3 transition-all duration-200",
                         isActive
                           ? "bg-gradient-to-r from-orange-50 to-rose-50 text-orange-600 shadow-sm border border-orange-200/50"
                           : "text-slate-700 hover:bg-slate-50 hover:text-orange-600"
