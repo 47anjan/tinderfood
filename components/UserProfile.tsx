@@ -24,13 +24,13 @@ function UserProfile({ className }: UserProfileProps) {
   const { user, loading, logout } = useAuth();
 
   return loading ? (
-    <div className="h-10 w-10 animate-pulse rounded-full bg-gradient-to-br from-orange-100 to-rose-100" />
+    <div className="h-11 w-11 animate-pulse rounded-full bg-gradient-to-br from-orange-100 to-rose-100" />
   ) : (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "group relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300",
+            "group relative cursor-pointer flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300",
             "bg-white/80 backdrop-blur-sm border border-slate-200/60",
             "hover:bg-gradient-to-br hover:from-orange-50 hover:to-rose-50 hover:border-orange-200/80 hover:shadow-md",
             "focus:outline-none focus:ring-2 focus:ring-orange-300/50 focus:ring-offset-2 focus:ring-offset-white",
@@ -38,7 +38,7 @@ function UserProfile({ className }: UserProfileProps) {
             className
           )}
         >
-          <Avatar className="h-8 w-8 transition-transform duration-300 group-hover:scale-105">
+          <Avatar className="h-9 w-9 transition-transform duration-300 group-hover:scale-105">
             <AvatarImage src={user?.avatar} alt="User avatar" />
             <AvatarFallback className="bg-gradient-to-br from-orange-200 to-rose-200 text-orange-700 text-sm font-semibold border-0">
               {user?.name?.charAt(0).toUpperCase() || "U"}

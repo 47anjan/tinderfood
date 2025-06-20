@@ -11,7 +11,7 @@ interface DashboardLayoutProps {
 
 function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen ove">
       {/* Mobile sidebar overlay */}
       {true && (
         <div className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden" />
