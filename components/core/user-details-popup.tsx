@@ -1,6 +1,7 @@
 "use client";
 
 import { User } from "@/lib/types";
+
 import {
   User as UserIcon,
   MapPin,
@@ -10,6 +11,7 @@ import {
   ChefHat,
   Heart,
   Leaf,
+  Soup,
 } from "lucide-react";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
@@ -175,9 +177,11 @@ const UserDetailPopup = ({
             {/* Cuisine Preferences */}
             {user.cuisinePreferences?.length > 0 && (
               <div className="mb-6">
-                <h4 className="font-semibold text-slate-800 mb-3">
+                <h4 className="font-semibold flex items-center gap-3 text-slate-800 mb-3">
+                  <Soup size={20} className="text-slate-400" />
                   Preferred Cuisines
                 </h4>
+
                 <div className="flex flex-wrap gap-2">
                   {user.cuisinePreferences.map((cuisine, index) => (
                     <span

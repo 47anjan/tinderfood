@@ -246,3 +246,20 @@ export type SearchIngredientSuggestion = {
   name: string;
   image: string;
 };
+
+export interface UserRequestConnection {
+  _id: string;
+  fromUserId: {
+    _id: string;
+    name: string;
+    username: string;
+    email: string;
+    cookingLevel: "beginner" | "intermediate" | "advanced" | string;
+    avatar: string;
+  };
+  bio: string;
+  toUserId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}

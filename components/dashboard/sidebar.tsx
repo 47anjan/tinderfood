@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { X, User, Settings, ChefHat } from "lucide-react";
+import { X, User, Settings, ChefHat, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -18,6 +18,12 @@ export function Sidebar() {
       href: "/dashboard/cooking-preference",
       icon: Settings,
       description: "Set your preferences",
+    },
+    {
+      name: "Connections",
+      href: "/dashboard/connections",
+      icon: Users,
+      description: "Manage your connections",
     },
   ];
 
@@ -60,7 +66,7 @@ export function Sidebar() {
           <button
             type="button"
             className={cn(
-              "p-2 rounded-lg transition-all duration-200",
+              "p-2 rounded-lg ",
               "text-slate-500 hover:text-slate-700 hover:bg-slate-100",
               "focus:outline-none focus:ring-2 focus:ring-orange-300/50"
             )}
@@ -79,7 +85,7 @@ export function Sidebar() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "group relative flex items-center gap-4 rounded-xl px-3 py-3 transition-all duration-200",
+                  "group relative flex items-center gap-4 rounded-xl px-3 py-3 ",
                   isActive
                     ? "bg-gradient-to-r from-orange-50 to-rose-50 text-orange-600 shadow-sm border border-orange-200/50"
                     : "text-slate-700 hover:bg-slate-50 hover:text-orange-600"
@@ -87,7 +93,7 @@ export function Sidebar() {
               >
                 <div
                   className={cn(
-                    "p-2 rounded-lg transition-all duration-200",
+                    "p-2 rounded-lg ",
                     isActive
                       ? "bg-gradient-to-br from-orange-100 to-rose-100 shadow-sm"
                       : "bg-slate-100 group-hover:bg-gradient-to-br group-hover:from-orange-100 group-hover:to-rose-100"
@@ -165,7 +171,7 @@ export function Sidebar() {
                       key={item.name}
                       href={item.href}
                       className={cn(
-                        "group relative flex items-center gap-4 rounded-xl px-3 py-3 transition-all duration-200",
+                        "group relative flex items-center gap-4 rounded-xl px-3 py-3 ",
                         isActive
                           ? "bg-gradient-to-r from-orange-50 to-rose-50 text-orange-600 shadow-sm border border-orange-200/50"
                           : "text-slate-700 hover:bg-slate-50 hover:text-orange-600"
@@ -173,7 +179,7 @@ export function Sidebar() {
                     >
                       <div
                         className={cn(
-                          "p-2.5 rounded-lg transition-all duration-200",
+                          "p-2.5 rounded-lg ",
                           isActive
                             ? "bg-gradient-to-br from-orange-100 to-rose-100 shadow-sm"
                             : "bg-slate-100 group-hover:bg-gradient-to-br group-hover:from-orange-100 group-hover:to-rose-100"
