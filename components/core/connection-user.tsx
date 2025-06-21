@@ -1,6 +1,6 @@
 "use client";
 import { User } from "@/lib/types";
-import { User as UserIcon, MapPin, UserPlus, Eye } from "lucide-react";
+import { User as UserIcon, MapPin, UserPlus } from "lucide-react";
 import UserDetails from "./user-details-popup";
 interface UserProps {
   user: User;
