@@ -1,13 +1,7 @@
 "use client";
 import { User } from "@/lib/types";
-import {
-  User as UserIcon,
-  MapPin,
-  UserPlus,
-  X,
-  Check,
-  Clock,
-} from "lucide-react";
+import { User as UserIcon, MapPin, UserPlus, Eye } from "lucide-react";
+import UserDetails from "./user-details-popup";
 interface UserProps {
   user: User;
 }
@@ -15,7 +9,7 @@ interface UserProps {
 const Buttons = () => {
   return (
     <>
-      <button
+      {/* <button
         disabled
         className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-lg border border-green-200 cursor-not-allowed"
       >
@@ -36,13 +30,7 @@ const Buttons = () => {
         <X size={16} />
         <span className="font-medium">Rejected</span>
       </button>
-      <button className="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-lg hover:from-orange-600 hover:to-rose-600 transition-all duration-300 ">
-        <UserPlus
-          size={16}
-          className="transition-transform group-hover:scale-110"
-        />
-        <span className="font-medium">Connect</span>
-      </button>
+      
       <button className="flex items-center gap-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
         <Check size={14} />
         Accept
@@ -50,6 +38,14 @@ const Buttons = () => {
       <button className="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
         <X size={14} />
         Reject
+      </button> */}
+
+      <button className="group cursor-pointer flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-lg hover:from-orange-600 hover:to-rose-600 transition-all duration-300 ">
+        <UserPlus
+          size={16}
+          className="transition-transform group-hover:scale-110"
+        />
+        <span className="font-medium">Connect</span>
       </button>
     </>
   );
@@ -59,7 +55,7 @@ const ConnectionUser = ({ user }: UserProps) => {
   return (
     <div
       key={user._id}
-      className="group relative bg-white rounded-2xl p-6 border border-slate-100 hover:border-orange-200 transition-all duration-300 "
+      className="group relative bg-white rounded-2xl px-6 py-4 border border-slate-100 hover:border-orange-200 transition-all duration-300 "
     >
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-orange-500/[0.02] to-rose-500/[0.02] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -89,7 +85,12 @@ const ConnectionUser = ({ user }: UserProps) => {
               <h3 className="font-bold text-lg text-slate-800 group-hover:text-orange-600 transition-colors">
                 {user.name}
               </h3>
-              <p className="text-slate-500 text-sm">@{user.username}</p>
+              <div className="text-slate-500 text-sm flex items-center gap-1">
+                Cooking level:{" "}
+                <span className="px-2 text-xs block rounded-full bg-gradient-to-br capitalize from-orange-100 to-rose-100 ">
+                  {user.cookingLevel}
+                </span>
+              </div>
 
               {/* Location */}
               {user.location?.city && (
@@ -105,6 +106,7 @@ const ConnectionUser = ({ user }: UserProps) => {
 
           {/* Connection Action */}
           <div className="flex items-center gap-2 flex-shrink-0">
+            <UserDetails user={user} />
             <Buttons />
           </div>
         </div>

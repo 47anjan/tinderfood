@@ -143,14 +143,6 @@ const FoodiesPage = () => {
             </div>
           )}
 
-          <style jsx>{`
-            @keyframes shimmer {
-              100% {
-                transform: translateX(100%);
-              }
-            }
-          `}</style>
-
           {/* Error State */}
           {error && !loading && (
             <div className="flex flex-col items-center justify-center py-16">

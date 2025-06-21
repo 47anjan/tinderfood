@@ -13,6 +13,7 @@ export interface User {
   dietaryRestrictions: string[];
   favoriteFoods: string[];
   cuisinePreferences: string[];
+  createdAt: string;
 }
 
 export type Ingredient = {
