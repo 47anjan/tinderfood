@@ -117,11 +117,11 @@ const UserDetailPopup = ({
 
             {/* Cooking Level */}
             <div className="mb-6">
-              <h4 className="font-semibold text-slate-800 mb-3">
+              <h4 className="font-semibold flex items-center gap-3 text-slate-800 mb-3">
+                <ChefHat size={20} className="text-slate-400" />
                 Cooking Experience
               </h4>
               <div className="flex items-center gap-3">
-                <ChefHat size={20} className="text-slate-400" />
                 <span
                   className={`px-3 py-1.5 rounded-full text-sm font-medium capitalize ${getCookingLevelColor(
                     user.cookingLevel
