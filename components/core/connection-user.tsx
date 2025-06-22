@@ -1,57 +1,52 @@
 "use client";
 import { User } from "@/lib/types";
-import { User as UserIcon, MapPin, UserPlus } from "lucide-react";
+import {
+  User as UserIcon,
+  MapPin,
+  UserPlus,
+  Clock,
+  Loader2,
+} from "lucide-react";
 import UserDetails from "./user-details-popup";
+import { useState } from "react";
+import { BASE_URL } from "@/lib/constants";
 interface UserProps {
   user: User;
 }
 
-const Buttons = () => {
-  return (
-    <>
-      {/* <button
-        disabled
-        className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-lg border border-green-200 cursor-not-allowed"
-      >
-        <Check size={16} />
-        <span className="font-medium">Connected</span>
-      </button>
-      <button
-        disabled
-        className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-lg border border-orange-200 cursor-not-allowed"
-      >
-        <Clock size={16} />
-        <span className="font-medium">Pending</span>
-      </button>
-      <button
-        disabled
-        className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-500 rounded-lg border border-gray-200 cursor-not-allowed"
-      >
-        <X size={16} />
-        <span className="font-medium">Rejected</span>
-      </button>
-      
-      <button className="flex items-center gap-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
-        <Check size={14} />
-        Accept
-      </button>
-      <button className="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-        <X size={14} />
-        Reject
-      </button> */}
-
-      <button className="group cursor-pointer flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-lg hover:from-orange-600 hover:to-rose-600 transition-all duration-300 ">
-        <UserPlus
-          size={16}
-          className="transition-transform group-hover:scale-110"
-        />
-        <span className="font-medium hidden sm:block">Connect</span>
-      </button>
-    </>
-  );
-};
-
 const ConnectionUser = ({ user }: UserProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+
+  const handleConnect = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/request/send/interested/${user._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      const result = await response.json();
+
+      console.error(result);
+
+      setIsConnected(true);
+    } catch (error) {
+      console.error("Error sending connection request:", error);
+
+      alert("Failed to send connection request. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       key={user._id}
@@ -107,7 +102,35 @@ const ConnectionUser = ({ user }: UserProps) => {
           {/* Connection Action */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <UserDetails user={user} />
-            <Buttons />
+            <>
+              {isConnected ? (
+                <button
+                  disabled
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-lg border border-orange-200 cursor-not-allowed"
+                >
+                  <Clock size={16} />
+                  <span className="font-medium hidden sm:block">Pending</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleConnect}
+                  disabled={isLoading}
+                  className="group cursor-pointer flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-lg hover:from-orange-600 hover:to-rose-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <UserPlus
+                      size={16}
+                      className="transition-transform group-hover:scale-110"
+                    />
+                  )}
+                  <span className="font-medium hidden sm:block">
+                    {isLoading ? "Connecting..." : "Connect"}
+                  </span>
+                </button>
+              )}
+            </>
           </div>
         </div>
       </div>
