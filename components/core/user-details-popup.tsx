@@ -12,21 +12,34 @@ import {
   Heart,
   Leaf,
   Soup,
+  Loader2,
+  Clock,
 } from "lucide-react";
 import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { RemoveScroll } from "react-remove-scroll";
 import FocusLock from "react-focus-lock";
 
+interface UserDetailsProps {
+  user: User;
+  isConnected: boolean;
+  isLoading: boolean;
+  handleConnect: () => void;
+}
+
+interface UserDetailPopupProps extends UserDetailsProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 const UserDetailPopup = ({
   user,
   isOpen,
   onClose,
-}: {
-  user: User;
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
+  isConnected,
+  isLoading,
+  handleConnect,
+}: UserDetailPopupProps) => {
   if (!isOpen) return null;
 
   const getCookingLevelColor = (level: string) => {
@@ -205,10 +218,38 @@ const UserDetailPopup = ({
 
                 {/* Action Buttons */}
                 <div className="flex gap-3 pt-4 border-t border-slate-100">
-                  <button className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-xl hover:from-orange-600 hover:to-rose-600 transition-all duration-300 font-medium ">
-                    <UserPlus size={18} />
-                    Connect
-                  </button>
+                  <>
+                    {isConnected ? (
+                      <button
+                        disabled
+                        className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-xl border border-orange-200 cursor-not-allowed w-full justify-center"
+                      >
+                        <Clock size={16} />
+                        <span className="font-medium hidden sm:block">
+                          Pending
+                        </span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleConnect}
+                        disabled={isLoading}
+                        className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-xl hover:from-orange-600 hover:to-rose-600 transition-all duration-300 font-medium  "
+                      >
+                        {isLoading ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <UserPlus
+                            size={16}
+                            className="transition-transform group-hover:scale-110"
+                          />
+                        )}
+                        <span className="font-medium hidden sm:block">
+                          {isLoading ? "Connecting..." : "Connect"}
+                        </span>
+                      </button>
+                    )}
+                  </>
+
                   <button
                     onClick={onClose}
                     className="px-6 py-2.5 cursor-pointer border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors font-medium"
@@ -225,7 +266,12 @@ const UserDetailPopup = ({
   );
 };
 
-const UserDetails = ({ user }: { user: User }) => {
+const UserDetails = ({
+  user,
+  isConnected,
+  isLoading,
+  handleConnect,
+}: UserDetailsProps) => {
   const [showPopup, setShowPopup] = useState(false);
 
   const handleViewClick = () => {
@@ -249,6 +295,9 @@ const UserDetails = ({ user }: { user: User }) => {
         isOpen={showPopup}
         user={user}
         onClose={handleClosePopup}
+        isConnected={isConnected}
+        isLoading={isLoading}
+        handleConnect={handleConnect}
       />
     </>
   );

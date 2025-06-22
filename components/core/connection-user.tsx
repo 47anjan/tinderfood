@@ -40,7 +40,6 @@ const ConnectionUser = ({ user }: UserProps) => {
       setIsConnected(true);
     } catch (error) {
       console.error("Error sending connection request:", error);
-
       alert("Failed to send connection request. Please try again.");
     } finally {
       setIsLoading(false);
@@ -101,7 +100,12 @@ const ConnectionUser = ({ user }: UserProps) => {
 
           {/* Connection Action */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <UserDetails user={user} />
+            <UserDetails
+              handleConnect={handleConnect}
+              isLoading={isLoading}
+              isConnected={isConnected}
+              user={user}
+            />
             <>
               {isConnected ? (
                 <button
