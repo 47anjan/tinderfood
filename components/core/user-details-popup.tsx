@@ -83,7 +83,7 @@ const UserDetailPopup = ({
                         className=" w-20 sm:w-24 h-20 sm:h-24 rounded-full object-cover ring-4 ring-orange-100"
                       />
                     ) : (
-                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-100 to-rose-100 flex items-center justify-center ring-4 ring-orange-100">
+                      <div className="sm:w-24 h-20 w-20 sm:h-24 rounded-full bg-gradient-to-br from-orange-100 to-rose-100 flex items-center justify-center ring-4 ring-orange-100">
                         <UserIcon size={32} className="text-orange-600" />
                       </div>
                     )}
@@ -93,10 +93,12 @@ const UserDetailPopup = ({
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-800 mb-1">
+                    <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1">
                       {user.name}
                     </h3>
-                    <p className="text-slate-600 mb-2">@{user.username}</p>
+                    <p className="text-slate-600 text-sm sm:text-base mb-2">
+                      @{user.username}
+                    </p>
 
                     {/* Location */}
                     {user.location?.city && (
