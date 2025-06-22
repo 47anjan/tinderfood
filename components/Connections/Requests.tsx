@@ -1,13 +1,13 @@
 "use client";
 
-import { User as UserIcon, AlertCircle, Check, X, ChefHat } from "lucide-react";
-import { UserRequestConnection } from "@/lib/types";
+import { User as UserIcon, AlertCircle, Check, X } from "lucide-react";
+import { UserRequestReceived } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 import React, { useEffect, useState } from "react";
 
 const Requests = () => {
-  const [users, setUsers] = useState<UserRequestConnection[] | null>(null);
+  const [users, setUsers] = useState<UserRequestReceived[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

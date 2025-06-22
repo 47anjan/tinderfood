@@ -247,16 +247,27 @@ export type SearchIngredientSuggestion = {
   image: string;
 };
 
-export interface UserRequestConnection {
+interface UserRequestInfo {
   _id: string;
-  fromUserId: {
-    _id: string;
-    name: string;
-    username: string;
-    email: string;
-    cookingLevel: "beginner" | "intermediate" | "advanced" | string;
-    avatar: string;
-  };
+  name: string;
+  username: string;
+  email: string;
+  cookingLevel: "beginner" | "intermediate" | "advanced" | string;
+  avatar: string;
+}
+
+export interface UserRequestPending {
+  _id: string;
+  fromUserId: string;
+  bio: string;
+  toUserId: UserRequestInfo;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface UserRequestReceived {
+  _id: string;
+  fromUserId: UserRequestInfo;
   bio: string;
   toUserId: string;
   status: string;

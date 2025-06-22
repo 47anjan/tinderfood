@@ -85,7 +85,7 @@ const ConnectionsPage = () => {
         })}
       </nav>
 
-      <div className="mt-8 p-6 bg-white rounded-xl border border-slate-200">
+      <div className="mt-8  bg-white rounded-xl border border-slate-200">
         {activeTab === "friends" && (
           <div>
             <Friends />
