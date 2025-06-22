@@ -74,13 +74,13 @@ const UserDetailPopup = ({
             <ScrollArea className="pb-6">
               <div className="p-6 max-h-[75vh]">
                 {/* User Header */}
-                <div className="flex items-start gap-6 mb-6">
+                <div className="flex flex-col sm:flex-row items-start gap-6 mb-6">
                   <div className="relative">
                     {user.avatar ? (
                       <img
                         src={user.avatar}
                         alt={user.name}
-                        className="w-24 h-24 rounded-full object-cover ring-4 ring-orange-100"
+                        className=" w-20 sm:w-24 h-20 sm:h-24 rounded-full object-cover ring-4 ring-orange-100"
                       />
                     ) : (
                       <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-100 to-rose-100 flex items-center justify-center ring-4 ring-orange-100">
@@ -241,7 +241,7 @@ const UserDetails = ({ user }: { user: User }) => {
         className="group cursor-pointer flex items-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:border-orange-300 hover:bg-orange-50 transition-all duration-300"
       >
         <Eye size={16} className="transition-transform group-hover:scale-110" />
-        <span className="font-medium">View</span>
+        <span className="font-medium hidden sm:block">View</span>
       </button>
       <UserDetailPopup
         isOpen={showPopup}

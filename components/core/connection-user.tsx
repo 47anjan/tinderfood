@@ -45,7 +45,7 @@ const Buttons = () => {
           size={16}
           className="transition-transform group-hover:scale-110"
         />
-        <span className="font-medium">Connect</span>
+        <span className="font-medium hidden sm:block">Connect</span>
       </button>
     </>
   );
@@ -69,7 +69,7 @@ const ConnectionUser = ({ user }: UserProps) => {
                 <img
                   src={user.avatar}
                   alt={user.name}
-                  className="w-16 h-16 rounded-full object-cover ring-2 ring-orange-100 group-hover:ring-orange-200 transition-all duration-300"
+                  className=" w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover ring-2 ring-orange-100 group-hover:ring-orange-200 transition-all duration-300"
                 />
               ) : (
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-100 to-rose-100 flex items-center justify-center ring-2 ring-orange-100 group-hover:ring-orange-200 transition-all duration-300">
@@ -82,11 +82,11 @@ const ConnectionUser = ({ user }: UserProps) => {
             </div>
 
             <div className="flex-1">
-              <h3 className="font-bold text-lg text-slate-800 group-hover:text-orange-600 transition-colors">
+              <h3 className="font-bold text-base sm:text-lg text-slate-800 group-hover:text-orange-600 transition-colors">
                 {user.name}
               </h3>
-              <div className="text-slate-500 text-sm flex items-center gap-1">
-                Cooking level:{" "}
+              <div className="text-slate-500 mt-0.5 text-sm flex items-center gap-1">
+                <span className="hidden sm:block">Cooking level: </span>
                 <span className="px-2 text-xs block rounded-full bg-gradient-to-br capitalize from-orange-100 to-rose-100 ">
                   {user.cookingLevel}
                 </span>
