@@ -53,7 +53,7 @@ const FoodiesPage = () => {
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-orange-50/30 to-rose-50/30">
         {/* Main Content */}
-        <main className="container mx-auto px-6 sm:px-10 md:px-[74px] py-8">
+        <main className="max-w-6xl mx-auto px-6 sm:px-10 md:px-[74px] py-8">
           {/* Page Header */}
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
