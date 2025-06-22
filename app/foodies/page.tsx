@@ -48,42 +48,6 @@ const FoodiesPage = () => {
     getUsers();
   }, []);
 
-  const handleRetry = () => {
-    setError(null);
-    const getUsers = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(`${BASE_URL}/api/users`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch users: ${response.status} ${response.statusText}`
-          );
-        }
-
-        const result = await response.json();
-        setUsers(result);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unexpected error occurred"
-        );
-        console.error("Error fetching users:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUsers();
-  };
-
   return (
     <>
       <Header />
@@ -160,12 +124,6 @@ const FoodiesPage = () => {
               <p className="text-slate-600 mb-4 text-center max-w-md">
                 {error}
               </p>
-              <button
-                onClick={handleRetry}
-                className="px-6 py-2 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-lg hover:from-orange-600 hover:to-rose-600 transition-all duration-300 font-medium"
-              >
-                Try Again
-              </button>
             </div>
           )}
 
