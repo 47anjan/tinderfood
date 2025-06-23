@@ -274,3 +274,21 @@ export interface UserRequestReceived {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface UserConnection {
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar?: string;
+  bio?: string;
+  location: {
+    city?: string;
+    country?: string;
+  };
+  cookingLevel: "beginner" | "intermediate" | "advanced" | "professional";
+  dietaryRestrictions: string[];
+  favoriteFoods: string[];
+  cuisinePreferences: string[];
+  createdAt: string;
+}

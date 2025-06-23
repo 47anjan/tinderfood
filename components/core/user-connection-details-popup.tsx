@@ -225,9 +225,7 @@ const UserDetailPopup = ({
                         className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-xl border border-orange-200 cursor-not-allowed w-full justify-center"
                       >
                         <Clock size={16} />
-                        <span className="font-medium hidden sm:block">
-                          Pending
-                        </span>
+                        <span className="font-medium block">Pending</span>
                       </button>
                     ) : (
                       <button
@@ -243,7 +241,7 @@ const UserDetailPopup = ({
                             className="transition-transform group-hover:scale-110"
                           />
                         )}
-                        <span className="font-medium hidden sm:block">
+                        <span className="font-medium block">
                           {isLoading ? "Connecting..." : "Connect"}
                         </span>
                       </button>
@@ -266,7 +264,7 @@ const UserDetailPopup = ({
   );
 };
 
-const UserDetails = ({
+const UserConnectionDetails = ({
   user,
   isConnected,
   isLoading,
@@ -303,4 +301,4 @@ const UserDetails = ({
   );
 };
 
-export default UserDetails;
+export default UserConnectionDetails;

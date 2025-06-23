@@ -7,9 +7,10 @@ import {
   Clock,
   Loader2,
 } from "lucide-react";
-import UserDetails from "./user-details-popup";
+import UserConnectionDetails from "./user-connection-details-popup";
 import { useState } from "react";
 import { BASE_URL } from "@/lib/constants";
+
 interface UserProps {
   user: User;
 }
@@ -100,7 +101,7 @@ const ConnectionUser = ({ user }: UserProps) => {
 
           {/* Connection Action */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <UserDetails
+            <UserConnectionDetails
               handleConnect={handleConnect}
               isLoading={isLoading}
               isConnected={isConnected}
@@ -110,7 +111,7 @@ const ConnectionUser = ({ user }: UserProps) => {
               {isConnected ? (
                 <button
                   disabled
-                  className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-lg border border-orange-200 cursor-not-allowed"
+                  className="flex  items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-lg border border-orange-200 cursor-not-allowed"
                 >
                   <Clock size={16} />
                   <span className="font-medium hidden sm:block">Pending</span>
