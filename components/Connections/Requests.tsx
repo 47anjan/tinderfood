@@ -1,10 +1,11 @@
 "use client";
 
-import { User as UserIcon, AlertCircle, Check, X } from "lucide-react";
+import { User as UserIcon, AlertCircle } from "lucide-react";
 import { UserRequestReceived } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 import React, { useEffect, useState } from "react";
+import RequestActionButtons from "./RequestActionButtons";
 
 const Requests = () => {
   const [users, setUsers] = useState<UserRequestReceived[] | null>(null);
@@ -140,9 +141,9 @@ const Requests = () => {
         {!loading && !error && users && (
           <>
             <div className="flex flex-col gap-6">
-              {users.map((user) => (
+              {users.map((req) => (
                 <div
-                  key={user._id}
+                  key={req._id}
                   className="bg-white rounded-2xl p-6 border border-slate-100 transition-all duration-300"
                 >
                   <div className="flex items-center justify-between">
@@ -150,8 +151,8 @@ const Requests = () => {
                       {/* Avatar */}
                       <div className="relative">
                         <img
-                          src={user.fromUserId.avatar}
-                          alt={user.fromUserId.name}
+                          src={req.fromUserId.avatar}
+                          alt={req.fromUserId.name}
                           className="w-16 h-16 rounded-full object-cover ring-2 ring-orange-100"
                         />
                       </div>
@@ -160,10 +161,10 @@ const Requests = () => {
                         {/* Name and Username */}
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-slate-800 text-lg">
-                            {user.fromUserId.name}
+                            {req.fromUserId.name}
                           </h3>
                           <span className="text-slate-500 text-sm">
-                            @{user.fromUserId.username}
+                            @{req.fromUserId.username}
                           </span>
                         </div>
 
@@ -171,36 +172,27 @@ const Requests = () => {
                         <div className="flex items-center gap-2 mb-2">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium border ${getCookingLevelColor(
-                              user.fromUserId.cookingLevel
+                              req.fromUserId.cookingLevel
                             )}`}
                           >
-                            {user.fromUserId.cookingLevel
+                            {req.fromUserId.cookingLevel
                               .charAt(0)
                               .toUpperCase() +
-                              user.fromUserId.cookingLevel.slice(1)}{" "}
+                              req.fromUserId.cookingLevel.slice(1)}{" "}
                             Cook
                           </span>
                           <span className="text-slate-400 text-xs">
-                            • {formatTimeAgo(user.createdAt)}
+                            • {formatTimeAgo(req.createdAt)}
                           </span>
                         </div>
 
                         {/* Request Message */}
-                        <p className="text-slate-600 text-sm">{user.bio}</p>
+                        <p className="text-slate-600 text-sm">{req.bio}</p>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-3">
-                      <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-                        <X size={16} />
-                        Decline
-                      </button>
-                      <button className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white rounded-xl transition-all duration-200 font-medium   disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-                        <Check size={16} />
-                        Accept
-                      </button>
-                    </div>
+                    <RequestActionButtons requestId={req._id} />
                   </div>
                 </div>
               ))}
