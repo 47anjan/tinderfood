@@ -49,7 +49,7 @@ export function Sidebar() {
       >
         {/* Mobile header */}
         <div className="flex h-16 items-center justify-between px-6 border-b border-slate-200/80">
-          <div className="flex items-center gap-3 ml-0 lg:ml-0">
+          <Link href={"/"} className="flex items-center gap-3 ml-0 lg:ml-0">
             <div className="p-2 rounded-xl bg-gradient-to-br from-orange-100 to-rose-100 ">
               <ChefHat size={18} className="text-orange-600" />
             </div>
@@ -61,7 +61,7 @@ export function Sidebar() {
                 Dashboard
               </span>
             </div>
-          </div>
+          </Link>
 
           <button
             type="button"
@@ -141,7 +141,10 @@ export function Sidebar() {
                   "border-b border-slate-200/80 bg-gradient-to-r from-orange-500/[0.02] to-rose-500/[0.02]"
                 )}
               >
-                <div className="flex items-center gap-3 ml-0 lg:ml-0">
+                <Link
+                  href={"/"}
+                  className="flex items-center gap-3 ml-0 lg:ml-0"
+                >
                   <div className="p-2 rounded-xl bg-gradient-to-br from-orange-100 to-rose-100 shadow-sm">
                     <ChefHat size={18} className="text-orange-600" />
                   </div>
@@ -153,7 +156,7 @@ export function Sidebar() {
                       Dashboard
                     </span>
                   </div>
-                </div>
+                </Link>
               </div>
 
               {/* Desktop navigation */}

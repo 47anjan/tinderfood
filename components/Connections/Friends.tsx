@@ -116,9 +116,6 @@ const Friends = () => {
               Something went wrong
             </h3>
             <p className="text-slate-600 mb-4 text-center max-w-md">{error}</p>
-            <button className="px-6 py-3 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-xl hover:from-orange-600 hover:to-rose-600 transition-all duration-300 font-medium shadow-lg ">
-              Try Again
-            </button>
           </div>
         )}
 
