@@ -1,6 +1,6 @@
 "use client";
 
-import { User as UserIcon, AlertCircle, X } from "lucide-react";
+import { User as UserIcon, AlertCircle } from "lucide-react";
 import { UserConnection } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
@@ -33,6 +33,7 @@ const Friends = () => {
         }
 
         const result = await response.json();
+
         setUsers(result);
       } catch (err) {
         setError(
@@ -57,19 +58,6 @@ const Friends = () => {
       default:
         return "bg-gray-100 text-gray-700 border-gray-200";
     }
-  };
-
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-    );
-
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays}d ago`;
   };
 
   return (

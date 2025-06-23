@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@/lib/types";
+import { UserConnection } from "@/lib/types";
 
 import {
   User as UserIcon,
@@ -19,7 +19,7 @@ import { RemoveScroll } from "react-remove-scroll";
 import FocusLock from "react-focus-lock";
 
 interface UserDetailsProps {
-  user: User;
+  user: UserConnection;
 }
 
 interface UserDetailPopupProps extends UserDetailsProps {
@@ -42,6 +42,7 @@ const UserDetailPopup = ({ user, isOpen, onClose }: UserDetailPopupProps) => {
         return "bg-gray-100 text-gray-700";
     }
   };
+  console.log(user);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
