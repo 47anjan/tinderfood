@@ -8,12 +8,12 @@ import React, { useEffect, useState } from "react";
 import RequestActionButtons from "./RequestActionButtons";
 
 const Requests = () => {
-  const [users, setUsers] = useState<UserRequestReceived[] | null>(null);
+  const [requests, setRequests] = useState<UserRequestReceived[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const getUsers = async () => {
+    const getRequests = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -28,23 +28,23 @@ const Requests = () => {
 
         if (!response.ok) {
           throw new Error(
-            `Failed to fetch users: ${response.status} ${response.statusText}`
+            `Failed to fetch requests: ${response.status} ${response.statusText}`
           );
         }
 
         const result = await response.json();
-        setUsers(result);
+        setRequests(result);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "An unexpected error occurred"
         );
-        console.error("Error fetching users:", err);
+        console.error("Error fetching requests:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    getUsers();
+    getRequests();
   }, []);
   const getCookingLevelColor = (level: string) => {
     switch (level.toLowerCase()) {
@@ -137,11 +137,11 @@ const Requests = () => {
           </div>
         )}
 
-        {/* Success State - Users List */}
-        {!loading && !error && users && (
+        {/* Success State - Requests List */}
+        {!loading && !error && requests && (
           <>
             <div className="flex flex-col gap-6">
-              {users.map((req) => (
+              {requests.map((req) => (
                 <div
                   key={req._id}
                   className="bg-white rounded-2xl p-6 border border-slate-100 transition-all duration-300"
@@ -187,7 +187,9 @@ const Requests = () => {
                         </div>
 
                         {/* Request Message */}
-                        <p className="text-slate-600 text-sm">{req.bio}</p>
+                        <p className="text-slate-600 text-sm">
+                          {req.fromUserId.bio}
+                        </p>
                       </div>
                     </div>
 
@@ -199,7 +201,7 @@ const Requests = () => {
             </div>
 
             {/* Empty State */}
-            {users.length === 0 && (
+            {requests.length === 0 && (
               <div className="text-center py-16">
                 <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <UserIcon size={32} className="text-orange-600" />

@@ -254,12 +254,12 @@ interface UserRequestInfo {
   email: string;
   cookingLevel: "beginner" | "intermediate" | "advanced" | string;
   avatar: string;
+  bio: string;
 }
 
 export interface UserRequestPending {
   _id: string;
   fromUserId: string;
-  bio: string;
   toUserId: UserRequestInfo;
   status: string;
   createdAt: string;
@@ -268,7 +268,6 @@ export interface UserRequestPending {
 export interface UserRequestReceived {
   _id: string;
   fromUserId: UserRequestInfo;
-  bio: string;
   toUserId: string;
   status: string;
   createdAt: string;

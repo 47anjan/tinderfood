@@ -1,18 +1,19 @@
 "use client";
 
-import { User as UserIcon, AlertCircle, X } from "lucide-react";
+import { User as UserIcon, AlertCircle } from "lucide-react";
 import { UserRequestPending } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 import React, { useEffect, useState } from "react";
+import ButtonCancelRequest from "./ButtonCancelRequest";
 
 const Pending = () => {
-  const [users, setUsers] = useState<UserRequestPending[] | null>(null);
+  const [requests, setRequests] = useState<UserRequestPending[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const getUsers = async () => {
+    const getRequests = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -27,23 +28,23 @@ const Pending = () => {
 
         if (!response.ok) {
           throw new Error(
-            `Failed to fetch users: ${response.status} ${response.statusText}`
+            `Failed to fetch requests: ${response.status} ${response.statusText}`
           );
         }
 
         const result = await response.json();
-        setUsers(result);
+        setRequests(result);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "An unexpected error occurred"
         );
-        console.error("Error fetching users:", err);
+        console.error("Error fetching requests:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    getUsers();
+    getRequests();
   }, []);
   const getCookingLevelColor = (level: string) => {
     switch (level?.toLowerCase()) {
@@ -133,13 +134,13 @@ const Pending = () => {
           </div>
         )}
 
-        {/* Success State - Users List */}
-        {!loading && !error && users && (
+        {/* Success State - Requests List */}
+        {!loading && !error && requests && (
           <>
             <div className="flex flex-col gap-6">
-              {users?.map((user) => (
+              {requests?.map((req) => (
                 <div
-                  key={user._id}
+                  key={req._id}
                   className="bg-white rounded-2xl p-6 border border-slate-100 transition-all duration-300"
                 >
                   <div className="flex items-center justify-between">
@@ -147,8 +148,8 @@ const Pending = () => {
                       {/* Avatar */}
                       <div className="relative">
                         <img
-                          src={user.toUserId.avatar}
-                          alt={user.toUserId.name}
+                          src={req.toUserId.avatar}
+                          alt={req.toUserId.name}
                           className="w-16 h-16 rounded-full object-cover ring-2 ring-orange-100"
                         />
                       </div>
@@ -157,10 +158,10 @@ const Pending = () => {
                         {/* Name and Username */}
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-slate-800 text-lg">
-                            {user.toUserId.name}
+                            {req.toUserId.name}
                           </h3>
                           <span className="text-slate-500 text-sm">
-                            @{user.toUserId.username}
+                            @{req.toUserId.username}
                           </span>
                         </div>
 
@@ -168,39 +169,34 @@ const Pending = () => {
                         <div className="flex items-center gap-2 mb-2">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium border ${getCookingLevelColor(
-                              user.toUserId.cookingLevel
+                              req.toUserId.cookingLevel
                             )}`}
                           >
-                            {user.toUserId.cookingLevel
-                              .charAt(0)
-                              .toUpperCase() +
-                              user.toUserId.cookingLevel.slice(1)}{" "}
+                            {req.toUserId.cookingLevel.charAt(0).toUpperCase() +
+                              req.toUserId.cookingLevel.slice(1)}{" "}
                             Cook
                           </span>
                           <span className="text-slate-400 text-xs">
-                            • {formatTimeAgo(user.createdAt)}
+                            • {formatTimeAgo(req.createdAt)}
                           </span>
                         </div>
 
                         {/* Request Message */}
-                        <p className="text-slate-600 text-sm">{user.bio}</p>
+                        <p className="text-slate-600 text-sm">
+                          {req.toUserId.bio}
+                        </p>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-3">
-                      <button className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-600 hover:to-rose-600 text-white rounded-xl transition-all duration-200 font-medium   disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-                        <X size={16} />
-                        Cancel
-                      </button>
-                    </div>
+                    <ButtonCancelRequest requestId={req._id} />
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Empty State */}
-            {users.length === 0 && (
+            {requests.length === 0 && (
               <div className="text-center py-16">
                 <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <UserIcon size={32} className="text-orange-600" />

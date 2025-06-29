@@ -46,9 +46,9 @@ const RequestActionButtons = ({ requestId }: RequestActionButtonsProps) => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}/api/request/review/reject/${requestId}`,
+        `${BASE_URL}/api/request/review/removed/${requestId}`,
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
@@ -96,7 +96,7 @@ const RequestActionButtons = ({ requestId }: RequestActionButtonsProps) => {
                 />
               )}
               <span className="font-medium hidden sm:block">
-                {isLoading ? "Accepting..." : "Accept"}
+                {isLoading ? "Declining..." : "Decline"}
               </span>
             </button>
           )}
