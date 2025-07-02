@@ -86,6 +86,12 @@ export type SearchRecipe = {
   image: string;
 };
 
+export interface SaveRecipe {
+  id: number;
+  title: string;
+  image: string;
+}
+
 export type SearchIngredient = {
   id: number;
   name: string;

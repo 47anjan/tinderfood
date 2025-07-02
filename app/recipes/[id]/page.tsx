@@ -1,9 +1,10 @@
 import RecipeChat from "@/components/ai-chat/RecipeChat";
+import ButtonSaveRecipe from "@/components/core/button-save-recipe";
 import Header from "@/components/home/Header";
 import { describeTitle } from "@/lib/actions";
 
 import { API_KEY, BASE_URL_FOOD } from "@/lib/constants";
-import { RecipeDetails } from "@/lib/types";
+import { RecipeDetails, SaveRecipe } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import { cache } from "react";
@@ -77,6 +78,12 @@ const RecipeInformation = async ({
     );
   }
 
+  const saveRecipe: SaveRecipe = {
+    id: recipe.id,
+    image: recipe.image,
+    title: recipe.title,
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50/30 via-white to-rose-50/30">
       <div className="absolute inset-0 bg-gradient-to-r from-orange-500/3 via-transparent to-rose-500/3"></div>
@@ -122,6 +129,9 @@ const RecipeInformation = async ({
                     <span className="font-medium text-slate-700">
                       {recipe.healthScore}% healthy
                     </span>
+                  </div>
+                  <div className="ml-auto">
+                    <ButtonSaveRecipe recipe={saveRecipe} />
                   </div>
                 </div>
               </div>

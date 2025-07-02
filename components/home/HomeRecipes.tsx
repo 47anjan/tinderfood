@@ -8,8 +8,9 @@ import Image from "next/image";
 import useInfiniteSearch from "@/hooks/useInfiniteSearch";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
-import { Clock, Star, ChefHat, Sparkles, AlertCircle } from "lucide-react";
+import { ChefHat, Sparkles, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ButtonSaveRecipe from "../core/button-save-recipe";
 
 const HomeRecipes = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(menus[0]);
@@ -149,62 +150,57 @@ const HomeRecipes = () => {
               ) : (
                 <>
                   {allRecipes.map((recipe, index) => (
-                    <Link
-                      key={recipe.id}
-                      href={`/recipes/${recipe.id}`}
-                      className={cn(
-                        "group relative block rounded-2xl overflow-hidden transition-all duration-500 ",
-                        "bg-white/80 backdrop-blur-sm border border-slate-200/50 shadow-sm hover:shadow-2xl hover:shadow-orange-500/10",
-                        "hover:border-orange-200/50 hover:bg-white/90"
-                      )}
-                      style={{
-                        animationDelay: `${index * 100}ms`,
-                      }}
-                    >
-                      {/* Image container with overlay effects */}
-                      <div className="relative h-[200px] overflow-hidden">
-                        {recipe.image && (
-                          <>
-                            <img
-                              src={
-                                imageErrors[recipe.id]
-                                  ? demoImage
-                                  : recipe?.image
-                              }
-                              loading="lazy"
-                              className="w-full h-full object-cover transition-all duration-700 group-hover:brightness-110"
-                              width={400}
-                              height={200}
-                              alt={recipe.title}
-                              onError={() => handleImageError(`${recipe.id}`)}
-                            />
-
-                            {/* Gradient overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                            {/* Floating action indicators */}
-                            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                              <div className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg">
-                                <Star className="h-4 w-4 text-orange-500" />
-                              </div>
-                              <div className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg">
-                                <Clock className="h-4 w-4 text-slate-600" />
-                              </div>
-                            </div>
-                          </>
+                    <article className="relative group" key={recipe.id}>
+                      <Link
+                        href={`/recipes/${recipe.id}`}
+                        className={cn(
+                          "group relative block rounded-2xl overflow-hidden transition-all duration-500 ",
+                          "bg-white/80 backdrop-blur-sm border border-slate-200/50 shadow-sm hover:shadow-2xl hover:shadow-orange-500/10",
+                          "hover:border-orange-200/50 hover:bg-white/90"
                         )}
-                      </div>
+                        style={{
+                          animationDelay: `${index * 100}ms`,
+                        }}
+                      >
+                        {/* Image container with overlay effects */}
+                        <div className="relative h-[200px] overflow-hidden">
+                          {recipe.image && (
+                            <>
+                              <img
+                                src={
+                                  imageErrors[recipe.id]
+                                    ? demoImage
+                                    : recipe?.image
+                                }
+                                loading="lazy"
+                                className="w-full h-full object-cover transition-all duration-700 group-hover:brightness-110"
+                                width={400}
+                                height={200}
+                                alt={recipe.title}
+                                onError={() => handleImageError(`${recipe.id}`)}
+                              />
 
-                      {/* Content section */}
-                      <div className="p-6">
-                        <h4 className="text-lg font-semibold text-slate-800 line-clamp-2 leading-6 group-hover:text-orange-600 transition-colors duration-300">
-                          {recipe.title}
-                        </h4>
+                              {/* Gradient overlay */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </>
+                          )}
+                        </div>
 
-                        {/* Hover indicator */}
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-rose-500 transform scale-x-0 group-hover:scale-x-100 will-change-transform transition-transform duration-300 origin-left"></div>
+                        {/* Content section */}
+                        <div className="p-6">
+                          <h4 className="text-lg font-semibold text-slate-800 line-clamp-2 leading-6 group-hover:text-orange-600 transition-colors duration-300">
+                            {recipe.title}
+                          </h4>
+
+                          {/* Hover indicator */}
+                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-rose-500 transform scale-x-0 group-hover:scale-x-100 will-change-transform transition-transform duration-300 origin-left"></div>
+                        </div>
+                      </Link>
+                      {/* Floating action indicators */}
+                      <div className="absolute opacity-0 transform translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 top-4 z-10 right-4">
+                        <ButtonSaveRecipe recipe={recipe} />
                       </div>
-                    </Link>
+                    </article>
                   ))}
                 </>
               )}
