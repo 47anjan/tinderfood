@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Settings, LogOut, Users } from "lucide-react";
+import { User, Settings, LogOut, Users, Heart } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -139,6 +139,26 @@ function UserProfile({ className }: UserProfileProps) {
               />
             </div>
             <span className="font-medium">Connections</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className={cn(
+            "group mx-1 px-3 py-2.5 rounded-lg transition-all duration-200 cursor-pointer",
+            "hover:bg-gradient-to-r hover:from-orange-50 hover:to-rose-50 focus:bg-gradient-to-r focus:from-orange-50 focus:to-rose-50"
+          )}
+          asChild
+        >
+          <Link
+            className="flex items-center gap-3 text-sm text-slate-700 hover:text-orange-600 focus:text-orange-600"
+            href="/dashboard/save-recipes"
+          >
+            <div className="flex items-center justify-center w-5 h-5">
+              <Heart
+                size={16}
+                className="transition-colors duration-200 group-hover:text-orange-600"
+              />
+            </div>
+            <span className="font-medium">Saved Recipes</span>
           </Link>
         </DropdownMenuItem>
 
