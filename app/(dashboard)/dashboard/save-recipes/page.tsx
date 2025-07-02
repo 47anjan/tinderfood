@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
+import { BASE_URL } from "@/lib/constants";
 
 interface SavedRecipe {
   _id: string;
@@ -58,9 +59,21 @@ const SavedRecipesPage = () => {
 
   const handleRemoveRecipe = async (recipeId: string) => {
     try {
-      console.log(recipeId);
+      const response = await fetch(
+        `${BASE_URL}/api/favorite/recipe/remove/${recipeId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      await response.json();
+
+      const data = savedRecipes.filter((rec) => rec.id !== recipeId);
+
+      setSavedRecipes(data);
     } catch (error) {
-      console.error("Error removing recipe:", error);
+      console.log(error);
     }
   };
 
@@ -239,7 +252,7 @@ const SavedRecipesPage = () => {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleRemoveRecipe(recipe._id);
+                          handleRemoveRecipe(recipe.id);
                         }}
                         className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg"
                         title="Remove from saved recipes"
