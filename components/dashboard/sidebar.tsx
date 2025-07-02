@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { X, User, Settings, ChefHat, Users } from "lucide-react";
+import { X, User, Settings, ChefHat, Users, Heart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -24,6 +24,12 @@ export function Sidebar() {
       href: "/dashboard/connections",
       icon: Users,
       description: "Manage your connections",
+    },
+    {
+      name: "Saved Recipes",
+      href: "/dashboard/save-recipes",
+      icon: Heart,
+      description: "Manage your recipes",
     },
   ];
 
