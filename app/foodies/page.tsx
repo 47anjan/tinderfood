@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { User as UserIcon, AlertCircle } from "lucide-react";
 
 import ConnectionUser from "@/components/core/connection-user";
@@ -11,21 +11,35 @@ import Header from "@/components/home/Header";
 const FoodiesPage = () => {
   const [users, setUsers] = useState<User[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    const getUsers = async () => {
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const pageRef = useRef(1);
+
+  const fetchUsers = useCallback(
+    async (pageNum: number, isInitial: boolean = false) => {
+      // Prevent multiple simultaneous requests
+      if (loadingMore && !isInitial) return;
+
       try {
-        setLoading(true);
-        setError(null);
+        if (isInitial) {
+          setLoading(true);
+        } else {
+          setLoadingMore(true);
+        }
 
-        const response = await fetch(`${BASE_URL}/api/users`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${BASE_URL}/api/users?page=${pageNum}&limit=10`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           throw new Error(
@@ -34,18 +48,63 @@ const FoodiesPage = () => {
         }
 
         const result = await response.json();
-        setUsers(result);
+
+        if (result.length === 0) {
+          setHasMore(false);
+          console.log("No more users to load. hasMore set to false.");
+        } else {
+          setUsers((prevUsers) =>
+            isInitial ? result : [...(prevUsers || []), ...result]
+          );
+        }
+
+        if (isInitial) {
+          setLoading(false);
+        } else {
+          setLoadingMore(false);
+        }
       } catch (err) {
+        setLoading(false);
+        setLoadingMore(false);
+
         setError(
           err instanceof Error ? err.message : "An unexpected error occurred"
         );
         console.error("Error fetching users:", err);
-      } finally {
-        setLoading(false);
       }
-    };
+    },
+    [loadingMore]
+  );
 
-    getUsers();
+  useEffect(() => {
+    const target = observerRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && hasMore && !loadingMore && !loading) {
+            const nextPage = pageRef.current + 1;
+            pageRef.current = nextPage;
+            fetchUsers(nextPage, false);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "20px",
+      }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [fetchUsers, hasMore, loadingMore, loading]);
+
+  useEffect(() => {
+    fetchUsers(1, true);
   }, []);
 
   return (
@@ -65,7 +124,7 @@ const FoodiesPage = () => {
             </p>
           </div>
 
-          {/* Loading State with Shimmer Effect */}
+          {/* Initial Loading State with Shimmer Effect */}
           {loading && (
             <div className="flex flex-col gap-6">
               {/* Loading Skeletons with Shimmer */}
@@ -136,6 +195,32 @@ const FoodiesPage = () => {
                   <ConnectionUser key={user._id} user={user} />
                 ))}
               </div>
+
+              {/* Loading More Indicator */}
+              {loadingMore && (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+                </div>
+              )}
+
+              {/* Infinite Scroll Trigger */}
+              {hasMore && !loadingMore && (
+                <div
+                  ref={observerRef}
+                  className="h-10 flex items-center justify-center"
+                >
+                  <div className="text-slate-400 text-sm">Loading more...</div>
+                </div>
+              )}
+
+              {/* End of Results */}
+              {!hasMore && users.length > 0 && (
+                <div className="text-center py-8">
+                  <p className="text-slate-500 text-sm">
+                    You&apos;ve reached the end of the list
+                  </p>
+                </div>
+              )}
 
               {/* Empty State */}
               {users.length === 0 && (
