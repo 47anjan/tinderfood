@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 
+import { usePathname, useRouter } from "next/navigation";
+
 // Simplified data types
 interface Chat {
   id: string;
@@ -75,11 +77,37 @@ export default function ChatLayout({
 }>) {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(chats[0]);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const filteredChats = chats.filter((chat) =>
     chat.userName.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const formatTime = (timestamp: number) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+
+    if (diffInHours < 1) {
+      return "Just now";
+    } else if (diffInHours < 24) {
+      return `${Math.floor(diffInHours)}h ago`;
+    } else {
+      return `${Math.floor(diffInHours / 24)}d ago`;
+    }
+  };
+
+  const handleChatSelect = (chatId: string) => {
+    router.push(`/chat/${chatId}`);
+  };
+
+  const getCurrentChatId = () => {
+    const match = pathname.match(/^\/chat\/(.+)$/);
+    return match ? match[1] : null;
+  };
+
+  const currentChatId = getCurrentChatId();
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -101,20 +129,29 @@ export default function ChatLayout({
           {filteredChats.map((chat) => (
             <button
               key={chat.id}
-              className={`w-full text-left p-4 border-b border-y-gray-300 hover:bg-gray-50 ${
-                selectedChat?.id === chat.id
+              className={`w-full cursor-pointer text-left p-4 border-b border-y-gray-300 hover:bg-gray-50 ${
+                currentChatId === chat.id
                   ? "bg-blue-50 border-l-4 border-blue-500"
                   : ""
               }`}
-              onClick={() => setSelectedChat(chat)}
+              onClick={() => handleChatSelect(chat.id)}
             >
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
                   {chat.userName.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm truncate">
-                    {chat.userName}
+                  <div className="flex items-center justify-between">
+                    <div className="font-medium text-sm truncate">
+                      {chat.userName}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {chat.messages.length > 0
+                        ? formatTime(
+                            chat.messages[chat.messages.length - 1].timestamp
+                          )
+                        : ""}
+                    </div>
                   </div>
                   <div className="text-xs text-gray-500 truncate">
                     {chat.messages.length > 0

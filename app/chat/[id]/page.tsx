@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageSquare, Send, Phone, Mail, User } from "lucide-react";
+import { useParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 // Simplified data types
 interface Chat {
@@ -14,7 +16,7 @@ interface Chat {
 }
 
 interface Message {
-  sender: "user" | "user";
+  sender: "user" | "admin";
   content: string;
   timestamp: number;
 }
@@ -34,7 +36,7 @@ const chats: Chat[] = [
         timestamp: Date.now() - 3600000,
       },
       {
-        sender: "user",
+        sender: "admin",
         content:
           "Hi, we just launched a new product line. Which type are you interested in?",
         timestamp: Date.now() - 3500000,
@@ -69,18 +71,26 @@ const chats: Chat[] = [
 ];
 
 const ChatPage = () => {
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(chats[0]);
+  const params = useParams();
+  const chatId = params.id as string;
 
   const [message, setMessage] = useState("");
   const [showUserInfo, setShowUserInfo] = useState(true);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Find the selected chat based on the URL parameter
+  useEffect(() => {
+    const chat = chats.find((c) => c.id === chatId);
+    setSelectedChat(chat || null);
+  }, [chatId]);
 
   // Auto scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [selectedChat?.messages]);
+  }, [selectedChat?.messages, message]);
 
   const handleSendMessage = (e?: React.FormEvent | React.KeyboardEvent) => {
     if (e) e.preventDefault();
@@ -96,7 +106,6 @@ const ChatPage = () => {
       setMessage("");
     }
   };
-
   return (
     <>
       {/* Chat Messages */}
@@ -133,18 +142,18 @@ const ChatPage = () => {
                     msg.sender === "user" ? "justify-end" : "justify-start"
                   }`}
                 >
-                  <div
-                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  <article
+                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-md  ${
                       msg.sender === "user"
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-gray-800"
+                        ? "bg-blue-500 text-white rounded-br-none"
+                        : "bg-white text-gray-800 rounded-bl-none"
                     }`}
                   >
                     <p className="text-sm">{msg.content}</p>
                     <p className="text-xs mt-1 opacity-70">
                       {new Date(msg.timestamp).toLocaleTimeString()}
                     </p>
-                  </div>
+                  </article>
                 </div>
               ))}
               <div ref={messagesEndRef} />
@@ -157,15 +166,17 @@ const ChatPage = () => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type a message..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2 border border-gray-300 focus:outline-none  rounded-full focus:ring-2 focus:ring-blue-500"
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage(e)}
                 />
-                <button
+                <Button
                   onClick={handleSendMessage}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  size="icon"
+                  className="bg-blue-500 text-white px-4 py-2  hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                  disabled={message.trim() === ""}
                 >
-                  <Send size={20} />
-                </button>
+                  <Send className="h-5 w-5" />
+                </Button>
               </div>
             </div>
           </>
