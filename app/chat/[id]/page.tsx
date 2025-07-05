@@ -81,7 +81,7 @@ const ChatPage = () => {
 
   // Find the selected chat based on the URL parameter
   useEffect(() => {
-    const chat = chats.find((c) => c.id === chatId);
+    const chat = chats.find((c) => c.id === "1");
     setSelectedChat(chat || null);
   }, [chatId]);
 

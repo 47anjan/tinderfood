@@ -17,6 +17,7 @@ import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { RemoveScroll } from "react-remove-scroll";
 import FocusLock from "react-focus-lock";
+import Link from "next/link";
 
 interface UserDetailsProps {
   user: UserConnection;
@@ -207,14 +208,17 @@ const UserDetailPopup = ({ user, isOpen, onClose }: UserDetailPopupProps) => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-3 pt-4 border-t border-slate-100">
-                  <button className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-xl hover:from-orange-600 hover:to-rose-600 transition-all duration-300 font-medium  ">
+                  <Link
+                    href={`/chat/${user._id}`}
+                    className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-xl hover:from-orange-600 hover:to-rose-600 transition-all duration-300 font-medium  "
+                  >
                     <Mail
                       size={16}
                       className="transition-transform group-hover:scale-110"
                     />
 
                     <span className="font-medium block">Message</span>
-                  </button>
+                  </Link>
 
                   <button
                     onClick={onClose}
