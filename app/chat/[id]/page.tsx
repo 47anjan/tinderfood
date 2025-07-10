@@ -172,7 +172,7 @@ const ChatPage = () => {
                 }`}
               >
                 <article
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-md  ${
+                  className={`max-w-xs  shadow lg:max-w-md px-4 py-2 rounded-md  ${
                     msg.fromUserId === currentUser?._id
                       ? "bg-blue-500 text-white rounded-br-none"
                       : "bg-white text-gray-800 rounded-bl-none"

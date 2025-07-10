@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-provider";
 import QueryClientProvider from "@/contexts/query-client-provider";
+import { ReduxProvider } from "@/contexts/redux-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -115,7 +116,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
-          <QueryClientProvider>{children}</QueryClientProvider>
+          <ReduxProvider>
+            <QueryClientProvider>{children}</QueryClientProvider>
+          </ReduxProvider>
         </AuthProvider>
       </body>
     </html>
