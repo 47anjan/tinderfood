@@ -1,224 +1,248 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageSquare, Send, Phone, Mail, User } from "lucide-react";
+import { Send, Phone, Mail, User } from "lucide-react";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/auth-provider";
+import { createSocketConnection } from "@/lib/socket";
 
 // Simplified data types
-interface Chat {
+interface User {
   id: string;
   userName: string;
   userEmail?: string;
   userPhone?: string;
-  messages: Message[];
   online?: boolean;
 }
 
 interface Message {
-  sender: "user" | "admin";
+  toUserId: string;
+  fromUserId: string;
   content: string;
   timestamp: number;
 }
 
-// Sample data
-const chats: Chat[] = [
-  {
-    id: "1",
-    userName: "Nguyen Van A",
-    userEmail: "nguyenvana@example.com",
-    userPhone: "0901234567",
-    online: true,
-    messages: [
-      {
-        sender: "user",
-        content: "Hello, I want to ask about your new product.",
-        timestamp: Date.now() - 3600000,
-      },
-      {
-        sender: "admin",
-        content:
-          "Hi, we just launched a new product line. Which type are you interested in?",
-        timestamp: Date.now() - 3500000,
-      },
-    ],
-  },
-  {
-    id: "2",
-    userName: "Tran Thi B",
-    userEmail: "tranthib@example.com",
-    userPhone: "0909876543",
-    messages: [
-      {
-        sender: "user",
-        content: "Do you ship your products to Hanoi?",
-        timestamp: Date.now() - 86400000,
-      },
-    ],
-  },
-  {
-    id: "3",
-    userName: "Le Van C",
-    userPhone: "0912345678",
-    messages: [
-      {
-        sender: "user",
-        content: "I need help with order #12345.",
-        timestamp: Date.now() - 172800000,
-      },
-    ],
-  },
-];
-
 const ChatPage = () => {
   const params = useParams();
   const chatId = params.id as string;
-
+  const { user: currentUser } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
   const [message, setMessage] = useState("");
   const [showUserInfo, setShowUserInfo] = useState(true);
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [messages, setMessages] = useState<Message[] | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const socketRef = useRef<any>(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Find the selected chat based on the URL parameter
   useEffect(() => {
-    const chat = chats.find((c) => c.id === "1");
-    setSelectedChat(chat || null);
-  }, [chatId]);
+    if (!chatId || !currentUser?._id) return;
+    const socket = createSocketConnection();
+    socketRef.current = socket;
+
+    socket.emit("joinChat", {
+      name: currentUser.name,
+      fromUserId: currentUser?._id,
+      toUserId: chatId,
+    });
+
+    setUser({
+      id: "1",
+      userName: "47joshua",
+      userEmail: "joshua@gmail.com",
+      userPhone: "01771472157",
+      online: true,
+    });
+
+    socket.on("receiveMessage", (message) => {
+      if (
+        message.toUserId === currentUser._id &&
+        message.fromUserId === chatId
+      ) {
+        setMessages((prevMessages) => [...(prevMessages || []), message]);
+      }
+    });
+
+    socket.on("startTyping", ({ fromUserId, toUserId }) => {
+      if (fromUserId === chatId && toUserId === currentUser._id) {
+        setIsTyping(true);
+      }
+    });
+
+    socket.on("stopTyping", ({ fromUserId, toUserId }) => {
+      if (fromUserId === chatId && toUserId === currentUser._id) {
+        setIsTyping(false);
+      }
+    });
+
+    return () => {
+      socket.off("receiveMessage");
+      socket.off("startTyping");
+      socket.off("stopTyping");
+      socket.disconnect();
+    };
+  }, [chatId, currentUser?._id]);
 
   // Auto scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [selectedChat?.messages, message]);
+  }, [messages, message]);
 
   const handleSendMessage = (e?: React.FormEvent | React.KeyboardEvent) => {
+    if (!chatId || !currentUser?._id) return;
+
     if (e) e.preventDefault();
-    if (message.trim() && selectedChat) {
+
+    if (message.trim()) {
       const newMessage: Message = {
-        sender: "user",
+        fromUserId: currentUser._id,
+        toUserId: chatId,
         content: message,
         timestamp: Date.now(),
       };
+      socketRef.current.emit("sendMessage", newMessage);
 
-      // Update the selected chat's messages
-      selectedChat.messages.push(newMessage);
+      setMessages([...(messages || []), newMessage]);
       setMessage("");
     }
   };
+
+  const handleTyping = () => {
+    if (!socketRef.current || !user?.id) return;
+
+    socketRef.current.emit("startTyping", {
+      fromUserId: currentUser?._id,
+      toUserId: chatId,
+    });
+
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+    typingTimeoutRef.current = setTimeout(() => {
+      socketRef.current.emit("stopTyping", {
+        fromUserId: currentUser?._id,
+        toUserId: chatId,
+      });
+    }, 2000);
+  };
+
   return (
     <>
       {/* Chat Messages */}
       <div className="flex-1 flex flex-col">
-        {selectedChat ? (
-          <>
-            {/* Header */}
-            <div className="bg-white p-4 border-b border-gray-300 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-                  {selectedChat.userName.charAt(0)}
-                </div>
-                <div>
-                  <h2 className="font-medium">{selectedChat.userName}</h2>
-                  <div className="text-sm text-gray-500">
-                    {selectedChat.online ? "Online" : "Offline"}
-                  </div>
-                </div>
+        <>
+          {/* Header */}
+          <div className="bg-white p-4 border-b border-gray-300 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+                {user?.userName.charAt(0)}
               </div>
-              <button
-                onClick={() => setShowUserInfo(!showUserInfo)}
-                className="p-2 rounded-lg hover:bg-gray-100"
-              >
-                <User size={20} />
-              </button>
+              <div>
+                <h2 className="font-medium">{user?.userName}</h2>
+                {isTyping ? (
+                  <div className="text-sm text-gray-500">Typing...</div>
+                ) : (
+                  <div className="text-sm text-gray-500">
+                    {user?.online ? "Online" : "Offline"}
+                  </div>
+                )}
+              </div>
             </div>
+            <button
+              onClick={() => setShowUserInfo(!showUserInfo)}
+              className="p-2 rounded-lg hover:bg-gray-100"
+            >
+              <User size={20} />
+            </button>
+          </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-              {selectedChat.messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`flex ${
-                    msg.sender === "user" ? "justify-end" : "justify-start"
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            {messages?.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex ${
+                  msg.fromUserId === currentUser?._id
+                    ? "justify-end"
+                    : "justify-start"
+                }`}
+              >
+                <article
+                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-md  ${
+                    msg.fromUserId === currentUser?._id
+                      ? "bg-blue-500 text-white rounded-br-none"
+                      : "bg-white text-gray-800 rounded-bl-none"
                   }`}
                 >
-                  <article
-                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-md  ${
-                      msg.sender === "user"
-                        ? "bg-blue-500 text-white rounded-br-none"
-                        : "bg-white text-gray-800 rounded-bl-none"
-                    }`}
-                  >
-                    <p className="text-sm">{msg.content}</p>
-                    <p className="text-xs mt-1 opacity-70">
-                      {new Date(msg.timestamp).toLocaleTimeString()}
-                    </p>
-                  </article>
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="bg-white p-4 border-t border-gray-300">
-              <div className="flex space-x-2">
-                <input
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 px-4 py-2 border border-gray-300 focus:outline-none  rounded-full focus:ring-2 focus:ring-blue-500"
-                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage(e)}
-                />
-                <Button
-                  onClick={handleSendMessage}
-                  size="icon"
-                  className="bg-blue-500 text-white px-4 py-2  hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
-                  disabled={message.trim() === ""}
-                >
-                  <Send className="h-5 w-5" />
-                </Button>
+                  <p className="text-sm">{msg.content}</p>
+                  <p className="text-xs mt-1 opacity-70">
+                    {new Date(msg.timestamp).toLocaleTimeString()}
+                  </p>
+                </article>
               </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
-            <div className="text-center">
-              <MessageSquare size={48} className="mx-auto mb-4 text-gray-400" />
-              <p>Select a chat to start messaging</p>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input */}
+          <div className="bg-white p-4 border-t border-gray-300">
+            <div className="flex space-x-2">
+              <input
+                value={message}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  handleTyping();
+                }}
+                placeholder="Type a message..."
+                className="flex-1 px-4 py-2 border border-gray-300 focus:outline-none  rounded-full focus:ring-2 focus:ring-blue-500"
+                onKeyPress={(e) => e.key === "Enter" && handleSendMessage(e)}
+              />
+              <Button
+                onClick={handleSendMessage}
+                size="icon"
+                className="bg-blue-500 text-white px-4 py-2  hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                disabled={message.trim() === ""}
+              >
+                <Send className="h-5 w-5" />
+              </Button>
             </div>
           </div>
-        )}
+        </>
       </div>
 
       {/* User Info Panel */}
-      {selectedChat && showUserInfo && (
+      {showUserInfo && (
         <div className="w-80 bg-white border-l border-gray-300 p-4">
           <h3 className="font-medium mb-4">User Information</h3>
 
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                {selectedChat.userName.charAt(0)}
+                {user?.userName.charAt(0)}
               </div>
               <div>
-                <h4 className="font-medium">{selectedChat.userName}</h4>
+                <h4 className="font-medium">{user?.userName}</h4>
                 <p className="text-sm text-gray-500">
-                  {selectedChat.online ? "Online" : "Offline"}
+                  {user?.online ? "Online" : "Offline"}
                 </p>
               </div>
             </div>
 
-            {selectedChat.userPhone && (
+            {user?.userPhone && (
               <div className="flex items-center space-x-2">
                 <Phone size={16} className="text-gray-400" />
-                <span className="text-sm">{selectedChat.userPhone}</span>
+                <span className="text-sm">{user?.userPhone}</span>
               </div>
             )}
 
-            {selectedChat.userEmail && (
+            {user?.userEmail && (
               <div className="flex items-center space-x-2">
                 <Mail size={16} className="text-gray-400" />
-                <span className="text-sm">{selectedChat.userEmail}</span>
+                <span className="text-sm">{user?.userEmail}</span>
               </div>
             )}
           </div>
