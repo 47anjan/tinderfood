@@ -1,52 +1,25 @@
 "use client";
 
 import { User as UserIcon, AlertCircle } from "lucide-react";
-import { UserConnection } from "@/lib/types";
-import { BASE_URL } from "@/lib/constants";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import UserConnectionDetails from "../core/user-connection-popup";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
+import { fetchConnections } from "@/store/slices/connectionSlice";
 
 const Friends = () => {
-  const [users, setUsers] = useState<UserConnection[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    connections: users,
+    loading,
+    error,
+  } = useAppSelector((state) => state.connections);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    dispatch(fetchConnections());
+  }, [dispatch]);
 
-        const response = await fetch(`${BASE_URL}/api/user/connections`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch users: ${response.status} ${response.statusText}`
-          );
-        }
-
-        const result = await response.json();
-
-        setUsers(result);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unexpected error occurred"
-        );
-        console.error("Error fetching users:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUsers();
-  }, []);
   const getCookingLevelColor = (level: string) => {
     switch (level?.toLowerCase()) {
       case "beginner":

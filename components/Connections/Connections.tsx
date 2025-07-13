@@ -1,56 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Search, AlertCircle, User as UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { BASE_URL } from "@/lib/constants";
-import { UserConnection } from "@/lib/types";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
+import { fetchConnections } from "@/store/slices/connectionSlice";
 
 const Connections = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [friends, setFriends] = useState<UserConnection[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
   const pathname = usePathname();
 
-  // Fetch friends data and convert to chat format
+  const {
+    connections: friends,
+    loading,
+    error,
+  } = useAppSelector((state) => state.connections);
+
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    const getFriends = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(`${BASE_URL}/api/user/connections`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch friends: ${response.status} ${response.statusText}`
-          );
-        }
-
-        const friends: UserConnection[] = await response.json();
-
-        setFriends(friends);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unexpected error occurred"
-        );
-        console.error("Error fetching friends:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getFriends();
-  }, []);
+    dispatch(fetchConnections());
+  }, [dispatch]);
 
   const filteredFriends = friends.filter((friend) =>
     friend.name.toLowerCase().includes(searchQuery.toLowerCase())

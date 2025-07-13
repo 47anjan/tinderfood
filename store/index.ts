@@ -1,7 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import connectionReducer from "./slices/connectionSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    connections: connectionReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
