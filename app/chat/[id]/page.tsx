@@ -20,10 +20,10 @@ import { UserConnection } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 interface Message {
-  toUserId: string;
-  fromUserId: string;
-  content: string;
-  timestamp: number;
+  _id: string;
+  senderId: string;
+  text: string;
+  createdAt: string;
 }
 
 const ChatPage = () => {
@@ -63,7 +63,25 @@ const ChatPage = () => {
       }
     };
 
+    const getMessages = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/chat/${chatId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+        const result = await response.json();
+
+        setMessages(result.messages);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     getUser();
+    getMessages();
   }, [chatId]);
 
   useEffect(() => {
@@ -123,7 +141,7 @@ const ChatPage = () => {
     if (e) e.preventDefault();
 
     if (message.trim()) {
-      const newMessage: Message = {
+      const newMessage = {
         fromUserId: currentUser._id,
         toUserId: chatId,
         content: message,
@@ -131,7 +149,7 @@ const ChatPage = () => {
       };
       socketRef.current.emit("sendMessage", newMessage);
 
-      setMessages([...(messages || []), newMessage]);
+      // setMessages([...(messages || []), newMessage]);
       setMessage("");
     }
   };
@@ -232,21 +250,21 @@ const ChatPage = () => {
               <div
                 key={index}
                 className={`flex ${
-                  msg.fromUserId === currentUser?._id
+                  msg.senderId === currentUser?._id
                     ? "justify-end"
                     : "justify-start"
                 }`}
               >
                 <article
                   className={`max-w-xs  shadow lg:max-w-md px-4 py-2 rounded-md  ${
-                    msg.fromUserId === currentUser?._id
+                    msg.senderId === currentUser?._id
                       ? "bg-blue-500 text-white rounded-br-none"
                       : "bg-white text-gray-800 rounded-bl-none"
                   }`}
                 >
-                  <p className="text-sm">{msg.content}</p>
+                  <p className="text-sm">{msg.text}</p>
                   <p className="text-xs mt-1 opacity-70">
-                    {new Date(msg.timestamp).toLocaleTimeString()}
+                    {new Date(msg.createdAt).toLocaleTimeString()}
                   </p>
                 </article>
               </div>
