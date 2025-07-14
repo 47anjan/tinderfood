@@ -20,7 +20,6 @@ import { UserConnection } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 interface Message {
-  _id: string;
   senderId: string;
   text: string;
   createdAt: string;
@@ -100,10 +99,7 @@ const ChatPage = () => {
     setUser(user!);
 
     socket.on("receiveMessage", (message) => {
-      if (
-        message.toUserId === currentUser._id &&
-        message.fromUserId === chatId
-      ) {
+      if (message.senderId === chatId) {
         setMessages((prevMessages) => [...(prevMessages || []), message]);
       }
     });
@@ -144,12 +140,19 @@ const ChatPage = () => {
       const newMessage = {
         fromUserId: currentUser._id,
         toUserId: chatId,
-        content: message,
+        text: message,
         timestamp: Date.now(),
       };
+
       socketRef.current.emit("sendMessage", newMessage);
 
-      // setMessages([...(messages || []), newMessage]);
+      const msg: Message = {
+        senderId: currentUser._id,
+        text: message,
+        createdAt: new Date(Date.now()).toISOString(),
+      };
+
+      setMessages([...(messages || []), msg]);
       setMessage("");
     }
   };
