@@ -70,7 +70,7 @@ const UnreadNotificationItem: React.FC<UnreadNotificationItemProps> = ({
             {formatTime(lastMessageTime)}
           </span>
         </div>
-        <p className="text-sm text-gray-600 truncate mt-1">
+        <p className="text-sm text-gray-600 truncate ">
           {truncateMessage(lastMessageText)}
         </p>
         <div className="flex items-center justify-between mt-2">
