@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-provider";
 import QueryClientProvider from "@/contexts/query-client-provider";
 import { ReduxProvider } from "@/contexts/redux-provider";
+import { SocketProvider } from "@/contexts/socket-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -117,7 +118,9 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
           <ReduxProvider>
-            <QueryClientProvider>{children}</QueryClientProvider>
+            <SocketProvider>
+              <QueryClientProvider>{children}</QueryClientProvider>
+            </SocketProvider>
           </ReduxProvider>
         </AuthProvider>
       </body>

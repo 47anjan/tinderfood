@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useRef, useEffect } from "react";
 import {
@@ -14,16 +15,12 @@ import {
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-provider";
-import { createSocketConnection } from "@/lib/socket";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { UserConnection } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
-import {
-  addUnreadMessage,
-  markAsRead,
-  setCurrentChat,
-} from "@/store/slices/notificationSlice";
+import { markAsRead, setCurrentChat } from "@/store/slices/notificationSlice";
+import { useSocket } from "@/contexts/socket-provider";
 
 interface Message {
   senderId: {
@@ -45,12 +42,14 @@ const ChatPage = () => {
   const [showUserInfo, setShowUserInfo] = useState(true);
   const [messages, setMessages] = useState<Message[] | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const socketRef = useRef<any>(null);
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [loadingUser, setLoadingUser] = useState(false);
   const { connections } = useAppSelector((state) => state.connections);
+
+  const { socket, isConnected } = useSocket();
 
   const dispatch = useAppDispatch();
 
@@ -105,11 +104,9 @@ const ChatPage = () => {
   }, [chatId]);
 
   useEffect(() => {
-    if (!chatId || !currentUser?._id) return;
-    const socket = createSocketConnection();
-    socketRef.current = socket;
+    if (!chatId || !currentUser?._id || !socket || !isConnected) return;
 
-    socket.emit("registerUser", currentUser?._id);
+    socketRef.current = socket;
 
     socket.emit("joinChat", {
       name: currentUser.name,
@@ -127,25 +124,13 @@ const ChatPage = () => {
       }
     });
 
-    socket.on("messageNotification", (notification) => {
-      console.log("Received notification:", notification);
-      dispatch(
-        addUnreadMessage({
-          senderId: notification.fromUserId,
-          senderName: notification.name,
-          messageText: notification.message,
-          timestamp: notification.timestamp,
-        })
-      );
-    });
-
-    socket.on("startTyping", ({ fromUserId, toUserId }) => {
+    socket.on("startTyping", ({ fromUserId, toUserId }: any) => {
       if (fromUserId === chatId && toUserId === currentUser._id) {
         setIsTyping(true);
       }
     });
 
-    socket.on("stopTyping", ({ fromUserId, toUserId }) => {
+    socket.on("stopTyping", ({ fromUserId, toUserId }: any) => {
       if (fromUserId === chatId && toUserId === currentUser._id) {
         setIsTyping(false);
       }
@@ -153,12 +138,10 @@ const ChatPage = () => {
 
     return () => {
       socket.off("receiveMessage");
-      socket.off("messageNotification");
       socket.off("startTyping");
       socket.off("stopTyping");
-      socket.disconnect();
     };
-  }, [chatId, currentUser?._id]);
+  }, [chatId, currentUser?._id, socket, isConnected]);
 
   // Auto scroll to bottom when messages change
   useEffect(() => {

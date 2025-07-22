@@ -1,9 +1,18 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { createContext, useContext, useEffect, useRef, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode,
+} from "react";
 import { createSocketConnection } from "@/lib/socket";
-
+import { useAuth } from "./auth-provider";
+import { useAppDispatch } from "@/store/hooks/hooks";
+import { addUnreadMessage } from "@/store/slices/notificationSlice";
 interface SocketContextType {
   socket: any | null;
   isConnected: boolean;
@@ -20,44 +29,76 @@ interface SocketProviderProps {
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const socketRef = useRef<any>(null);
-  const isConnectedRef = useRef(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const { user } = useAuth();
+  const userIdRef = useRef<string | null>(null);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // Create socket connection only once
-    if (!socketRef.current) {
+    // Only create connection if user exists and we don't have a socket or user changed
+    if (user?._id && (!socketRef.current || userIdRef.current !== user._id)) {
+      // Disconnect existing socket if user changed
+      if (socketRef.current && userIdRef.current !== user._id) {
+        socketRef.current.disconnect();
+      }
+
       const socket = createSocketConnection();
       socketRef.current = socket;
+      userIdRef.current = user._id;
 
       socket.on("connect", () => {
-        isConnectedRef.current = true;
         console.log("Socket connected");
+        setIsConnected(true);
+        // Register user after connection is established
+        socket.emit("registerUser", user._id);
+      });
+
+      socket.on("messageNotification", (notification: any) => {
+        console.log("Received notification:", notification);
+        dispatch(
+          addUnreadMessage({
+            senderId: notification.fromUserId,
+            senderName: notification.name,
+            messageText: notification.message,
+            timestamp: notification.timestamp,
+          })
+        );
       });
 
       socket.on("disconnect", () => {
-        isConnectedRef.current = false;
         console.log("Socket disconnected");
+        setIsConnected(false);
       });
 
-      socket.on("error", (error) => {
+      socket.on("error", (error: any) => {
         console.error("Socket error:", error);
+        setIsConnected(false);
+      });
+
+      socket.on("reconnect", () => {
+        console.log("Socket reconnected");
+        setIsConnected(true);
+        socket.emit("registerUser", user._id);
       });
     }
 
-    // Cleanup on unmount
+    // Cleanup only on unmount or when user logs out
     return () => {
-      if (socketRef.current) {
+      if (!user?._id && socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
-        isConnectedRef.current = false;
+        userIdRef.current = null;
+        setIsConnected(false);
       }
     };
-  }, []);
+  }, [user?._id]);
 
   return (
     <SocketContext.Provider
       value={{
         socket: socketRef.current,
-        isConnected: isConnectedRef.current,
+        isConnected,
       }}
     >
       {children}

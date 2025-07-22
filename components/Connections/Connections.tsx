@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, AlertCircle, User as UserIcon } from "lucide-react";
+import { Search, AlertCircle, User as UserIcon, Home } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { fetchConnections } from "@/store/slices/connectionSlice";
 import NotificationBell from "../notifications/NotificationBell";
+import Link from "next/link";
+
+import { setCurrentChat } from "@/store/slices/notificationSlice";
 
 const Connections = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -192,6 +195,16 @@ const Connections = () => {
             )}
           </>
         )}
+      </div>
+      <div className="p-5">
+        <Link
+          onClick={() => {
+            dispatch(setCurrentChat(null));
+          }}
+          href="/"
+        >
+          <Home className="text-gray-700" />
+        </Link>
       </div>
     </div>
   );
