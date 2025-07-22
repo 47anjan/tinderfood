@@ -7,6 +7,9 @@ import ConnectionUser from "@/components/core/connection-user";
 import { User } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 import Header from "@/components/home/Header";
+import { useAuth } from "@/contexts/auth-provider";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const FoodiesPage = () => {
   const [users, setUsers] = useState<User[] | null>(null);
@@ -14,6 +17,8 @@ const FoodiesPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+
+  const { user } = useAuth();
 
   const observerRef = useRef<HTMLDivElement | null>(null);
   const pageRef = useRef(1);
@@ -106,6 +111,59 @@ const FoodiesPage = () => {
   useEffect(() => {
     fetchUsers(1, true);
   }, []);
+
+  if (!user?._id) {
+    return (
+      <>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-orange-50/30 to-rose-50/30">
+          {/* Main Content */}
+          <main className="max-w-6xl mx-auto px-6 sm:px-10 md:px-[74px] py-8">
+            {/* Page Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
+                Discover Food Friends
+              </h1>
+              <p className="text-slate-600 text-lg">
+                Connect with fellow food enthusiasts who share your culinary
+                interests
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+              <div className="mb-4">
+                <AlertCircle size={36} className="text-gray-500" />
+              </div>
+              <h2 className="text-lg font-medium text-gray-800 mb-2">
+                You&apos;re not logged in
+              </h2>
+              <p className="text-sm text-gray-500 mb-6">
+                Please log in to access this page.
+              </p>
+              <Link
+                href="/login"
+                className={cn(
+                  "group relative h-11 flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300",
+
+                  "bg-slate-50  hover:bg-gradient-to-r hover:from-orange-50 hover:to-rose-50 border border-slate-200/80",
+                  "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:bg-gradient-to-r focus:from-orange-50 focus:to-rose-50",
+                  "hover:border-orange-200/60 "
+                )}
+              >
+                <UserIcon
+                  size={16}
+                  className="text-slate-600 transition-colors duration-300 group-hover:text-orange-600"
+                />
+                <span className="text-sm hidden  font-medium text-slate-700 transition-colors duration-300 group-hover:text-orange-600  sm:inline-block">
+                  Login
+                </span>
+              </Link>
+            </div>
+          </main>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
