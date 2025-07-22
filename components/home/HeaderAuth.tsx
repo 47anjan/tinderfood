@@ -15,7 +15,7 @@ const HeaderAuth = () => {
         <div className="size-11 bg-gradient-to-r from-orange-50 to-rose-50 border border-slate-200/80 rounded-full animate-pulse"></div>
       ) : (
         <>
-          {!user ? (
+          {!user?._id ? (
             <Link
               href="/login"
               className={cn(

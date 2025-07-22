@@ -10,6 +10,7 @@ import {
 import UserConnectionDetails from "./user-connection-details-popup";
 import { useState } from "react";
 import { BASE_URL } from "@/lib/constants";
+import { useAuth } from "@/contexts/auth-provider";
 
 interface UserProps {
   user: User;
@@ -18,6 +19,8 @@ interface UserProps {
 const ConnectionUser = ({ user }: UserProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  const { user: currentUser } = useAuth();
 
   const handleConnect = async () => {
     setIsLoading(true);
@@ -117,23 +120,27 @@ const ConnectionUser = ({ user }: UserProps) => {
                   <span className="font-medium hidden sm:block">Pending</span>
                 </button>
               ) : (
-                <button
-                  onClick={handleConnect}
-                  disabled={isLoading}
-                  className="group cursor-pointer flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-lg hover:from-orange-600 hover:to-rose-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <UserPlus
-                      size={16}
-                      className="transition-transform group-hover:scale-110"
-                    />
+                <>
+                  {currentUser?._id && (
+                    <button
+                      onClick={handleConnect}
+                      disabled={isLoading}
+                      className="group cursor-pointer flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-lg hover:from-orange-600 hover:to-rose-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <UserPlus
+                          size={16}
+                          className="transition-transform group-hover:scale-110"
+                        />
+                      )}
+                      <span className="font-medium hidden sm:block">
+                        {isLoading ? "Connecting..." : "Connect"}
+                      </span>
+                    </button>
                   )}
-                  <span className="font-medium hidden sm:block">
-                    {isLoading ? "Connecting..." : "Connect"}
-                  </span>
-                </button>
+                </>
               )}
             </>
           </div>
