@@ -15,12 +15,23 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-provider";
 import { createSocketConnection } from "@/lib/socket";
-import { useAppSelector } from "@/store/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { UserConnection } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
+import {
+  addUnreadMessage,
+  markAsRead,
+  setCurrentChat,
+} from "@/store/slices/notificationSlice";
+
 interface Message {
-  senderId: string;
+  senderId: {
+    _id: string;
+    name: string;
+    username: string;
+    avatar?: string;
+  };
   text: string;
   createdAt: string;
 }
@@ -40,6 +51,16 @@ const ChatPage = () => {
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [loadingUser, setLoadingUser] = useState(false);
   const { connections } = useAppSelector((state) => state.connections);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (chatId) {
+      dispatch(setCurrentChat(chatId));
+    }
+
+    dispatch(markAsRead(chatId));
+  }, [chatId, dispatch]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -88,6 +109,8 @@ const ChatPage = () => {
     const socket = createSocketConnection();
     socketRef.current = socket;
 
+    socket.emit("registerUser", currentUser?._id);
+
     socket.emit("joinChat", {
       name: currentUser.name,
       fromUserId: currentUser?._id,
@@ -98,10 +121,22 @@ const ChatPage = () => {
 
     setUser(user!);
 
-    socket.on("receiveMessage", (message) => {
-      if (message.senderId === chatId) {
+    socket.on("receiveMessage", (message: Message) => {
+      if (message.senderId._id === chatId) {
         setMessages((prevMessages) => [...(prevMessages || []), message]);
       }
+    });
+
+    socket.on("messageNotification", (notification) => {
+      console.log("Received notification:", notification);
+      dispatch(
+        addUnreadMessage({
+          senderId: notification.fromUserId,
+          senderName: notification.name,
+          messageText: notification.message,
+          timestamp: notification.timestamp,
+        })
+      );
     });
 
     socket.on("startTyping", ({ fromUserId, toUserId }) => {
@@ -118,6 +153,7 @@ const ChatPage = () => {
 
     return () => {
       socket.off("receiveMessage");
+      socket.off("messageNotification");
       socket.off("startTyping");
       socket.off("stopTyping");
       socket.disconnect();
@@ -147,7 +183,12 @@ const ChatPage = () => {
       socketRef.current.emit("sendMessage", newMessage);
 
       const msg: Message = {
-        senderId: currentUser._id,
+        senderId: {
+          _id: currentUser._id,
+          name: currentUser.name,
+          username: currentUser.username,
+          avatar: currentUser.avatar,
+        },
         text: message,
         createdAt: new Date(Date.now()).toISOString(),
       };
@@ -253,14 +294,14 @@ const ChatPage = () => {
               <div
                 key={index}
                 className={`flex ${
-                  msg.senderId === currentUser?._id
+                  msg.senderId._id === currentUser?._id
                     ? "justify-end"
                     : "justify-start"
                 }`}
               >
                 <article
                   className={`max-w-xs  shadow lg:max-w-md px-4 py-2 rounded-md  ${
-                    msg.senderId === currentUser?._id
+                    msg.senderId._id === currentUser?._id
                       ? "bg-blue-500 text-white rounded-br-none"
                       : "bg-white text-gray-800 rounded-bl-none"
                   }`}

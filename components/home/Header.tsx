@@ -1,8 +1,9 @@
-import { Soup } from "lucide-react";
+import { Soup, Users } from "lucide-react";
 import Link from "next/link";
 import { SearchBar } from "../core/search-bar";
 import { cn } from "@/lib/utils";
 import HeaderAuth from "./HeaderAuth";
+import NotificationBell from "../notifications/NotificationBell";
 
 const Header = () => {
   return (
@@ -24,7 +25,7 @@ const Header = () => {
           </Link>
 
           {/* Navigation */}
-          <nav className="flex items-center">
+          <nav className="flex space-x-4 items-center">
             <Link
               href="/cuisines?country=indian"
               className={cn(
@@ -49,6 +50,31 @@ const Header = () => {
                 Cuisines
               </span>
             </Link>
+
+            <Link
+              href="/foodies"
+              className={cn(
+                "group relative flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 will-change-transform",
+                "hover:bg-gradient-to-r hover:from-orange-50 hover:to-rose-50  ",
+                "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:bg-gradient-to-r focus:from-orange-50 focus:to-rose-50"
+              )}
+            >
+              {/* Icon container */}
+              <div className="relative p-1.5 rounded-lg bg-gradient-to-r from-orange-100 to-rose-100 group-hover:from-orange-200 group-hover:to-rose-200 transition-all will-change-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <Users
+                  size={18}
+                  className="text-orange-600 transition-all duration-300 group-hover:text-orange-700 group-focus:text-orange-700"
+                />
+
+                {/* Icon glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-rose-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
+              </div>
+
+              {/* Text */}
+              <span className="font-medium transition-all duration-300 hidden sm:inline-block group-hover:text-orange-600 group-focus:text-orange-600 group-hover:font-semibold">
+                Foodies
+              </span>
+            </Link>
           </nav>
         </div>
 
@@ -65,6 +91,7 @@ const Header = () => {
 
           {/* Login Button */}
           <HeaderAuth />
+          <NotificationBell />
         </div>
       </div>
 

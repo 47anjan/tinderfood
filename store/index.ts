@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import connectionReducer from "./slices/connectionSlice";
+import notificationReducer from "./slices/notificationSlice";
 
 export const store = configureStore({
   reducer: {
     connections: connectionReducer,
+    notification: notificationReducer,
   },
 });
 

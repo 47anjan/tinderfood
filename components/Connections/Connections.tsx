@@ -5,6 +5,7 @@ import { Search, AlertCircle, User as UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { fetchConnections } from "@/store/slices/connectionSlice";
+import NotificationBell from "../notifications/NotificationBell";
 
 const Connections = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,6 +20,8 @@ const Connections = () => {
   } = useAppSelector((state) => state.connections);
 
   const dispatch = useAppDispatch();
+
+  const { unreadNotifications } = useAppSelector((state) => state.notification);
 
   useEffect(() => {
     dispatch(fetchConnections());
@@ -53,10 +56,15 @@ const Connections = () => {
 
   const currentChatId = getCurrentChatId();
 
+  const getUnreadCount = (userId: string) => {
+    const notification = unreadNotifications[userId];
+    return notification ? notification.unreadCount : 0;
+  };
+
   return (
     <div className="w-80 bg-white border-r border-gray-300 flex flex-col">
-      <div className="p-4 border-b border-gray-300">
-        <div className="relative">
+      <div className="p-4 border-b gap-2 border-gray-300 flex items-center ">
+        <div className="relative flex-1 ">
           <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
           <input
             placeholder="Search friends..."
@@ -65,6 +73,7 @@ const Connections = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <NotificationBell />
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -128,6 +137,14 @@ const Connections = () => {
                         <span className="text-gray-600 font-medium">
                           {chat.name.charAt(0)}
                         </span>
+                      </div>
+                    )}
+
+                    {getUnreadCount(chat._id) > 0 && (
+                      <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                        {getUnreadCount(chat._id) > 9
+                          ? "9+"
+                          : getUnreadCount(chat._id)}
                       </div>
                     )}
 

@@ -1,4 +1,4 @@
-import Connections from "@/components/Connections/Connections";
+import Connections from "@/components/connections/Connections";
 
 export default function ChatLayout({
   children,
@@ -9,7 +9,6 @@ export default function ChatLayout({
     <div className="flex h-screen bg-gray-100">
       {/* Chat List */}
       <Connections />
-
       {children}
     </div>
   );
