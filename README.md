@@ -1,66 +1,57 @@
-# 🍽️ TinderFood – Social Recipe Discovery App
+# 🍔 TinderFood API – Backend for Social Recipe Discovery
 
-**TinderFood** is a next-gen, AI-powered recipe and social networking platform built for food lovers. Discover new recipes, connect with fellow foodies, save your favorites, and chat with friends—all in one place.
+**TinderFood API** is the robust backend service powering the TinderFood application—a next-gen, AI-powered recipe and social networking platform built for food lovers. This API handles user authentication, recipe management, social connections, and real-time chat functionality.
 
-Whether you're a home cook, foodie, or culinary adventurer, TinderFood personalizes your experience and brings the joy of cooking into your daily life.
+Whether you're building the frontend or integrating with our services, this API provides everything needed to create personalized culinary experiences and bring food enthusiasts together.
 
 ---
 
 ## 🌟 Features
 
-### 🔥 Core Features
+### 🔥 Core API Features
 
 - **User Authentication**:
 
-  - Secure login and registration using JWT
-  - Token-based session management
-  - Profile management and customization
+  - Secure JWT-based login and registration
+  - Token-based session management with HTTP-only cookies
+  - Profile management and customization endpoints
 
-- **Personalized Recipe Discovery**:
+- **Recipe Management**:
 
-  - Explore thousands of global recipes
-  - Save favorite recipes to your profile
-  - View detailed nutritional information
-  - Infinite scroll for seamless browsing
+  - Save and retrieve favorite recipes
+  - Recipe metadata storage and retrieval
+  - User-specific recipe collections
 
-- **AI Cooking Assistant**:
+- **AI Integration Ready**:
+  - Structured endpoints for AI cooking assistant integration
+  - User preference data for personalized recommendations
+  - Dietary restriction and cuisine preference handling
 
-  - Ask questions about ingredients or methods
-  - Suggest substitutions and alternatives
-  - Convert measurements and optimize cooking time
-
-### 🧑‍🤝‍🧑 Social Features
+### 🧑‍🤝‍🧑 Social API Features
 
 - **Foodie Network**:
 
-  - Find and connect with other food lovers
-  - View other users’ profiles and saved recipes
-  - Add friends and expand your foodie circle
+  - User discovery with advanced filtering
+  - Connection request system (interested/accepted flow)
+  - Friend management and social graph APIs
 
 - **Real-time Chat**:
-
-  - Built-in live messaging system using WebSockets
-  - Chat with your foodie friends about recipes, tips, or anything else
+  - WebSocket-powered messaging system
+  - Real-time notifications and typing indicators
+  - Chat history persistence and retrieval
 
 ---
 
 ## 🛠️ Tech Stack
 
-### 🔧 Backend
+### 🔧 Backend Architecture
 
-- **Node.js + Express**
-- **MongoDB + Mongoose** (for database)
-- **JWT** (authentication & session)
-- **WebSocket (Socket.io)** (real-time chat)
-- **Spoonacular API** (recipe data & nutritional info)
-
-### 🎨 Frontend
-
-- **React + TypeScript**
-- **Tailwind CSS + Shadcn UI**
-- **React Hot Toast** (notifications)
-- **React Query** (for data fetching)
-- **Responsive Design** for all devices
+- **Node.js + Express.js** (REST API framework)
+- **MongoDB + Mongoose** (database & ODM)
+- **JWT** (authentication & authorization)
+- **Socket.io** (real-time WebSocket communication)
+- **bcrypt** (password hashing & security)
+- **CORS** (cross-origin resource sharing)
 
 ---
 
@@ -69,8 +60,8 @@ Whether you're a home cook, foodie, or culinary adventurer, TinderFood personali
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/47anjan/tinderfood.git
-cd tinderfood
+git clone https://github.com/47anjan/tinderfood-api.git
+cd tinderfood-api
 ```
 
 ### 2. Install Dependencies
@@ -84,64 +75,36 @@ npm install
 Create a `.env` file in the root and add:
 
 ```env
-OPENAI_API_KEY=openai_key
-NEXT_PUBLIC_API_BASE_URL=backend_url
-NEXT_PUBLIC_API_KEY==your_spoonacular_key
+PORT=5000
+DB_CONNECTION=your_mongodb_connection_string
+JTW_SECRET=your_super_secret_jwt_key
 ```
 
 ### 4. Start Development Server
 
 ```bash
-npm run dev
+node src/app.js
 ```
 
-Frontend will run at `http://localhost:3000`
-Backend will run at `http://localhost:5000`
-
----
-
-## 💬 Example AI Prompts
-
-- “Suggest a vegetarian alternative for this recipe”
-- “What can I use instead of cream?”
-- “How many calories does this meal have?”
-- “Which recipes match my dietary preference?”
-
----
-
-## 🔐 Authentication Flow
-
-- JWT-based signup/login
-- Secure password handling
-- Authenticated routes with middleware
-- Role-based access control (if applicable)
-
----
-
-## 👥 Social & Messaging Features
-
-- Discover and view other foodie profiles
-- Send and accept friend requests
-- Real-time chat system powered by WebSockets
-- Share and discuss favorite recipes
+API will run at `http://localhost:5000`
 
 ---
 
 ## 🤝 Contributing
 
-We welcome all contributions!
+We welcome all contributions to make TinderFood API even better!
 
 1. Fork the repo
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
+2. Create a feature branch: `git checkout -b feature/amazing-api-feature`
+3. Commit your changes: `git commit -m 'Add amazing API feature'`
+4. Push to branch: `git push origin feature/amazing-api-feature`
 5. Open a Pull Request
 
 ---
 
 ## 📄 License
 
-MIT License – see [LICENSE](LICENSE) for more info.
+ISC License – see [LICENSE](LICENSE) for more info.
 
 ---
 
@@ -152,5 +115,5 @@ Got feedback or ideas? Reach out at:
 
 ---
 
-**Happy Cooking. Happy Connecting. 🍜**
-_Where Recipes Meet Friendships – TinderFood_
+**Powering Culinary Connections. Enabling Food Discovery. 🍜**
+_The Backend That Brings Food Lovers Together – TinderFood API_
