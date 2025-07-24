@@ -46,6 +46,8 @@ Whether you're building the frontend or integrating with our services, this API 
 
 ### 🔧 Backend Architecture
 
+> 🔗 **Backend Repository**: [TinderFood Backend](https://github.com/47anjan/tiderfood-api)
+
 - **Node.js + Express.js** (REST API framework)
 - **MongoDB + Mongoose** (database & ODM)
 - **JWT** (authentication & authorization)
