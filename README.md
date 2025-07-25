@@ -1,121 +1,170 @@
-# 🍔 TinderFood API – Backend for Social Recipe Discovery
+# 🍽️ TinderFood Frontend – Social Recipe Discovery App
 
-**TinderFood API** is the robust backend service powering the TinderFood application—a next-gen, AI-powered recipe and social networking platform built for food lovers. This API handles user authentication, recipe management, social connections, and real-time chat functionality.
-
-Whether you're building the frontend or integrating with our services, this API provides everything needed to create personalized culinary experiences and bring food enthusiasts together.
+**TinderFood Frontend** is a modern React application that powers the user interface for our social recipe discovery platform. Built with cutting-edge technologies, it delivers a seamless, responsive experience for food lovers to discover recipes, connect with friends, and explore culinary adventures.
 
 ---
 
 ## 🌟 Features
 
-### 🔥 Core API Features
+### 🎨 User Interface
 
-- **User Authentication**:
+- **Modern Design System**:
 
-  - Secure JWT-based login and registration
-  - Token-based session management with HTTP-only cookies
-  - Profile management and customization endpoints
+  - Clean, intuitive interface built with Tailwind CSS
+  - Shadcn UI components for consistency
+  - Fully responsive design across all devices
 
-- **Recipe Management**:
+- **Recipe Discovery**:
+  - Infinite scroll recipe feed
+  - Advanced search and filtering
+  - Recipe detail views with nutritional information
+  - Save/unsave recipes with visual feedback
+  - Interactive recipe card
 
-  - Save and retrieve favorite recipes
-  - Recipe metadata storage and retrieval
-  - User-specific recipe collections
+### 🔐 Authentication UI
 
-- **AI Integration Ready**:
-  - Structured endpoints for AI cooking assistant integration
-  - User preference data for personalized recommendations
-  - Dietary restriction and cuisine preference handling
+- **Secure Login/Register**:
+  - Modern authentication forms
+  - Real-time form validation
+  - JWT token management
+  - Protected route handling
+  - User profile management interface
 
-### 🧑‍🤝‍🧑 Social API Features
+### 🧑‍🤝‍🧑 Social Features
 
-- **Foodie Network**:
+- **User Profiles**:
 
-  - User discovery with advanced filtering
-  - Connection request system (interested/accepted flow)
-  - Friend management and social graph APIs
+  - View and edit personal profiles
+  - Browse other users' saved recipes
+  - Friend management system
+  - Profile customization options
 
 - **Real-time Chat**:
-  - WebSocket-powered messaging system
-  - Real-time notifications and typing indicators
-  - Chat history persistence and retrieval
+  - Live messaging interface
+  - WebSocket-powered real-time updates
+  - Chat history and message status
+  - Real time notifications
+
+### 🤖 AI Integration
+
+- **Smart Cooking Assistant**:
+  - Interactive chat interface for AI queries
+  - Nutritional analysis display
+  - Cooking tips and guidance
 
 ---
 
 ## 🛠️ Tech Stack
 
-### 🔧 Backend Architecture
+### 🔧 Backend
 
-> 🔗 **Backend Repository**: [TinderFood Backend](https://github.com/47anjan/tiderfood-api)
+- Node.js + Express
+- MongoDB + Mongoose (for database)
+- JWT (authentication & session)
+- WebSocket (Socket.io) (real-time chat)
+- Spoonacular API (recipe data & nutritional info)
 
-- **Node.js + Express.js** (REST API framework)
-- **MongoDB + Mongoose** (database & ODM)
-- **JWT** (authentication & authorization)
-- **Socket.io** (real-time WebSocket communication)
-- **bcrypt** (password hashing & security)
-- **CORS** (cross-origin resource sharing)
+### 🎨 Frontend
+
+- React + TypeScript
+- Tailwind CSS + Shadcn UI
+- React Hot Toast
+- Context API & Redux Toolkit - Global state management
+- React Query (for data fetching)
+- Responsive Design for all devices
 
 ---
 
 ## 🚀 Getting Started
 
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn package manager
+- Backend server running (see backend README)
+  > 🔗 **Backend Repository**: [TinderFood Backend](https://github.com/47anjan/tiderfood-api)
+
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/47anjan/tinderfood-api.git
-cd tinderfood-api
+git clone https://github.com/47anjan/tinderfood.git
+cd tinderfood/frontend
 ```
 
 ### 2. Install Dependencies
 
 ```bash
 npm install
+# or
+yarn install
 ```
 
-### 3. Set Up Environment Variables
+### 3. Environment Setup
 
-Create a `.env` file in the root and add:
+Create a `.env` file in the frontend directory:
 
 ```env
-PORT=5000
-DB_CONNECTION=your_mongodb_connection_string
-JTW_SECRET=your_super_secret_jwt_key
+OPENAI_API_KEY=
+NEXT_PUBLIC_API_BASE_URL://localhost:5000
+NEXT_PUBLIC_API_KEY=your_spoonacular_key
 ```
 
 ### 4. Start Development Server
 
 ```bash
-node src/app.js
+npm run dev
+# or
+yarn dev
 ```
 
-API will run at `http://localhost:5000`
+The application will be available at `http://localhost:3000`
+
+### 5. Build for Production
+
+```bash
+npm run build
+# or
+yarn build
+```
 
 ---
 
 ## 🤝 Contributing
 
-We welcome all contributions to make TinderFood API even better!
+### Development Workflow
 
-1. Fork the repo
-2. Create a feature branch: `git checkout -b feature/amazing-api-feature`
-3. Commit your changes: `git commit -m 'Add amazing API feature'`
-4. Push to branch: `git push origin feature/amazing-api-feature`
-5. Open a Pull Request
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Follow coding standards and run linting
+4. Write tests for new features
+5. Commit changes: `git commit -m 'feat: add amazing feature'`
+6. Push to branch: `git push origin feature/amazing-feature`
+7. Open a Pull Request
+
+### Code Standards
+
+- Use TypeScript for all new code
+- Follow React best practices
+- Write meaningful commit messages
+- Include tests for new features
+- Update documentation as needed
 
 ---
 
 ## 📄 License
 
-ISC License – see [LICENSE](LICENSE) for more info.
+MIT License – see [LICENSE](../LICENSE) for details.
 
 ---
 
-## 📧 Contact
+## 📧 Support
 
-Got feedback or ideas? Reach out at:
-**[anjankarmakar15@gmail.com](mailto:anjankarmakar15@gmail.com)**
+Need help or have questions?
+
+- **Email**: [anjankarmakar15@gmail.com](mailto:anjankarmakar15@gmail.com)
+- **Issues**: [GitHub Issues](https://github.com/47anjan/tinderfood/issues)
 
 ---
 
-**Powering Culinary Connections. Enabling Food Discovery. 🍜**
-_The Backend That Brings Food Lovers Together – TinderFood API_
+**🍜 Happy Cooking, Happy Coding!**
+_Building delicious user experiences – TinderFood Frontend_
