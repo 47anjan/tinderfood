@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Bell, MessageCircle, Check, User } from "lucide-react";
 import { useAppSelector } from "@/store/hooks/hooks";
+import { useRouter } from "next/navigation";
 
 interface UnreadNotificationItemProps {
   senderId: string;
@@ -10,8 +11,6 @@ interface UnreadNotificationItemProps {
   unreadCount: number;
   lastMessageText: string;
   lastMessageTime: number;
-  onMarkAsRead: (senderId: string) => void;
-  onNavigateToChat: (senderId: string) => void;
 }
 
 const UnreadNotificationItem: React.FC<UnreadNotificationItemProps> = ({
@@ -20,9 +19,9 @@ const UnreadNotificationItem: React.FC<UnreadNotificationItemProps> = ({
   unreadCount,
   lastMessageText,
   lastMessageTime,
-  onMarkAsRead,
-  onNavigateToChat,
 }) => {
+  const router = useRouter();
+
   const formatTime = (timestamp: number) => {
     const now = new Date();
     const messageTime = new Date(timestamp);
@@ -46,7 +45,12 @@ const UnreadNotificationItem: React.FC<UnreadNotificationItemProps> = ({
   };
 
   return (
-    <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer group">
+    <div
+      onClick={() => {
+        router.push(`/chat/${senderId}`);
+      }}
+      className="flex items-start space-x-3 p-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer group"
+    >
       <div className="relative">
         <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
           <User size={16} className="text-gray-600" />
@@ -58,10 +62,7 @@ const UnreadNotificationItem: React.FC<UnreadNotificationItemProps> = ({
         )}
       </div>
 
-      <div
-        className="flex-1 min-w-0"
-        onClick={() => onNavigateToChat(senderId)}
-      >
+      <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between">
           <h4 className="text-sm font-medium text-gray-900 truncate">
             {senderName}
@@ -81,28 +82,13 @@ const UnreadNotificationItem: React.FC<UnreadNotificationItemProps> = ({
       </div>
 
       <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onMarkAsRead(senderId);
-          }}
-          className="p-1 rounded-full hover:bg-gray-200 text-gray-500 hover:text-gray-700"
-          title="Mark as read"
-        >
-          <Check size={14} />
-        </button>
+        <Check size={14} />
       </div>
     </div>
   );
 };
 
-interface UnreadNotificationPanelProps {
-  onNavigateToChat: (senderId: string) => void;
-}
-
-const UnreadNotificationPanel: React.FC<UnreadNotificationPanelProps> = ({
-  onNavigateToChat,
-}) => {
+const UnreadNotificationPanel = () => {
   const totalUnreadCount = useAppSelector(
     (state) => state.notification.totalUnreadCount
   );
@@ -146,8 +132,6 @@ const UnreadNotificationPanel: React.FC<UnreadNotificationPanelProps> = ({
             unreadCount={notification.unreadCount}
             lastMessageText={notification.lastMessageText}
             lastMessageTime={notification.timestamp}
-            onMarkAsRead={() => {}}
-            onNavigateToChat={onNavigateToChat}
           />
         ))}
       </div>
@@ -183,10 +167,6 @@ const NotificationBell = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleNavigateToChat = (senderId: string) => {
-    setIsOpen(false);
-  };
-
   return (
     <div className="relative">
       <button
@@ -211,7 +191,7 @@ const NotificationBell = () => {
 
           {/* Notification Panel */}
           <div className="absolute right-[-30px] top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-            <UnreadNotificationPanel onNavigateToChat={handleNavigateToChat} />
+            <UnreadNotificationPanel />
           </div>
         </>
       )}

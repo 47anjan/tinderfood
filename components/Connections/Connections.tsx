@@ -5,7 +5,6 @@ import { Search, AlertCircle, User as UserIcon, Home } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { fetchConnections } from "@/store/slices/connectionSlice";
-import NotificationBell from "../notifications/NotificationBell";
 import Link from "next/link";
 
 import { setCurrentChat } from "@/store/slices/notificationSlice";
@@ -76,7 +75,6 @@ const Connections = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <NotificationBell />
       </div>
 
       <div className="flex-1 overflow-y-auto">
