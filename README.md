@@ -22,6 +22,10 @@
 
 ![Alt text](/public/demo/app4.png)
 
+### Exploring other foodies
+
+![Alt text](/public/demo/app10.png)
+
 ### Profile page (dashboard)
 
 ![Alt text](/public/demo/app5.png)
