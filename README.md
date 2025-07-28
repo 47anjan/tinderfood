@@ -151,6 +151,46 @@ yarn build
 
 ---
 
+## 📜 Demo
+
+### Home
+
+![Alt text](/public/demo/app1.png)
+
+### Home with notification
+
+![Alt text](/public/demo/app2.png)
+
+### Recipe details page
+
+![Alt text](/public/demo/app3.png)
+
+### Chat with recipe
+
+![Alt text](/public/demo/app4.png)
+
+### Profile page (dashboard)
+
+![Alt text](/public/demo/app5.png)
+
+### cooking preference page (dashboard)
+
+![Alt text](/public/demo/app6.png)
+
+### Connections page (dashboard)
+
+![Alt text](/public/demo/app7.png)
+
+### Veew profile (dashboard)
+
+![Alt text](/public/demo/app8.png)
+
+### Chat page
+
+![Alt text](/public/demo/app9.png)
+
+---
+
 ## 📄 License
 
 MIT License – see [LICENSE](../LICENSE) for details.
