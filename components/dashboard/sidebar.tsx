@@ -76,6 +76,8 @@ export function Sidebar() {
               "text-slate-500 hover:text-slate-700 hover:bg-slate-100",
               "focus:outline-none focus:ring-2 focus:ring-orange-300/50"
             )}
+            aria-label="Close sidebar"
+            title="Close sidebar"
           >
             <X size={20} />
           </button>
