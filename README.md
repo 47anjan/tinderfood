@@ -181,7 +181,7 @@ yarn build
 
 ![Alt text](/public/demo/app7.png)
 
-### Veew profile (dashboard)
+### View profile (dashboard)
 
 ![Alt text](/public/demo/app8.png)
 
