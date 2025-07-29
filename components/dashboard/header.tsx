@@ -3,8 +3,12 @@
 import { Menu } from "lucide-react";
 import UserProfile from "../UserProfile";
 import { cn } from "@/lib/utils";
+import { useAppDispatch } from "@/store/hooks/hooks";
+import { openSidebar } from "@/store/slices/globalSlice";
 
 export function Header() {
+  const dispatch = useAppDispatch();
+
   return (
     <header
       className={cn(
@@ -21,7 +25,12 @@ export function Header() {
           <div className="flex items-center gap-4">
             {/* Mobile menu button */}
             <button
+              onClick={() => {
+                dispatch(openSidebar());
+              }}
               type="button"
+              title="Open menu"
+              aria-label="Open menu"
               className={cn(
                 "p-2 rounded-lg transition-all duration-200 lg:hidden",
                 "text-slate-600 hover:text-orange-600 hover:bg-orange-50",

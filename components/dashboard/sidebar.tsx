@@ -1,6 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
+import { closeSidebar } from "@/store/slices/globalSlice";
 import { X, User, Settings, ChefHat, Users, Heart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,6 +37,9 @@ export function Sidebar() {
 
   const pathname = usePathname();
 
+  const isSidebarOpen = useAppSelector((store) => store.global.isSidebarOpen);
+  const dispatch = useAppDispatch();
+
   const isActiveLink = (href: string) => {
     if (href === "/dashboard") {
       return pathname === href;
@@ -50,7 +55,7 @@ export function Sidebar() {
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-80 transform transition-all duration-300 ease-in-out lg:hidden",
           "bg-white/95 backdrop-blur-md border-r border-slate-200/80 shadow-xl",
-          true ? "translate-x-0" : "-translate-x-full"
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Mobile header */}
@@ -70,10 +75,13 @@ export function Sidebar() {
           </Link>
 
           <button
+            onClick={() => {
+              dispatch(closeSidebar());
+            }}
             type="button"
             className={cn(
               "p-2 rounded-lg ",
-              "text-slate-500 hover:text-slate-700 hover:bg-slate-100",
+              "text-slate-500 cursor-pointer hover:text-slate-700 hover:bg-slate-100",
               "focus:outline-none focus:ring-2 focus:ring-orange-300/50"
             )}
             aria-label="Close sidebar"
@@ -90,6 +98,9 @@ export function Sidebar() {
             const Icon = item.icon;
             return (
               <Link
+                onClick={() => {
+                  dispatch(closeSidebar());
+                }}
                 key={item.name}
                 href={item.href}
                 className={cn(
