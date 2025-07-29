@@ -115,7 +115,7 @@ const SavedRecipesPage = () => {
   if (savedRecipes.length === 0 && !isLoading) {
     return (
       <>
-        <div className="min-h-screen bg-gradient-to-br from-orange-50/30 via-white to-rose-50/30">
+        <div className="min-h-screen relative bg-gradient-to-br from-orange-50/30 via-white to-rose-50/30">
           <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-rose-500/5"></div>
 
           {/* Floating decorative elements */}
@@ -178,8 +178,6 @@ const SavedRecipesPage = () => {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-orange-50/30 via-white to-rose-50/30">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-rose-500/5"></div>
-
         {/* Floating decorative elements */}
         <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-orange-200/20 to-rose-200/20 rounded-full blur-xl animate-pulse"></div>
         <div className="absolute top-60 right-16 w-24 h-24 bg-gradient-to-r from-rose-200/15 to-orange-200/15 rounded-full blur-2xl animate-pulse delay-1000"></div>
