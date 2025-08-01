@@ -16,11 +16,13 @@ import { addUnreadMessage } from "@/store/slices/notificationSlice";
 interface SocketContextType {
   socket: any | null;
   isConnected: boolean;
+  onlineUsers: string[];
 }
 
 const SocketContext = createContext<SocketContextType>({
   socket: null,
   isConnected: false,
+  onlineUsers: [],
 });
 
 interface SocketProviderProps {
@@ -32,6 +34,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [isConnected, setIsConnected] = useState(false);
   const { user } = useAuth();
   const userIdRef = useRef<string | null>(null);
+  const [onlineUsers, setOnlineUsers] = useState<string[] | []>([]);
 
   const dispatch = useAppDispatch();
 
@@ -52,6 +55,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         setIsConnected(true);
         // Register user after connection is established
         socket.emit("registerUser", user._id);
+      });
+
+      socket.on("onlineUsers", (users) => {
+        setOnlineUsers(users);
       });
 
       socket.on("messageNotification", (notification: any) => {
@@ -99,6 +106,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       value={{
         socket: socketRef.current,
         isConnected,
+        onlineUsers,
       }}
     >
       {children}

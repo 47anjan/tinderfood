@@ -8,9 +8,15 @@ import { fetchConnections } from "@/store/slices/connectionSlice";
 import Link from "next/link";
 
 import { setCurrentChat } from "@/store/slices/notificationSlice";
+import { cn } from "@/lib/utils";
+import { useSocket } from "@/contexts/socket-provider";
 
 const Connections = () => {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { onlineUsers } = useSocket();
+
+  const isOnline = (userId: string) => onlineUsers.find((id) => id === userId);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -149,7 +155,12 @@ const Connections = () => {
                       </div>
                     )}
 
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div
+                      className={cn(
+                        `absolute -bottom-1 -right-1 w-3 h-3  rounded-full border-2 border-white`,
+                        isOnline(chat._id) ? "bg-green-500" : "bg-gray-300"
+                      )}
+                    ></div>
                   </div>
 
                   <div className="flex-1 min-w-0">
