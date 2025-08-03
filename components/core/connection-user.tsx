@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 interface UserProps {
   user: User;
-  isOnline: (userId: string) => boolean;
+  isOnline: (userId: string) => string | undefined;
 }
 
 const ConnectionUser = ({ user, isOnline }: UserProps) => {

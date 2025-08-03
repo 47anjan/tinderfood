@@ -100,9 +100,6 @@ const UserDetailPopup = ({
                         <UserIcon size={32} className="text-orange-600" />
                       </div>
                     )}
-
-                    {/* Online indicator */}
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white"></div>
                   </div>
 
                   <div className="flex-1">
