@@ -8,10 +8,11 @@ import {
   useRef,
   useState,
   ReactNode,
+  useCallback,
 } from "react";
 import { createSocketConnection } from "@/lib/socket";
 import { useAuth } from "./auth-provider";
-import { useAppDispatch } from "@/store/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { addUnreadMessage } from "@/store/slices/notificationSlice";
 interface SocketContextType {
   socket: any | null;
@@ -37,6 +38,48 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [onlineUsers, setOnlineUsers] = useState<string[] | []>([]);
 
   const dispatch = useAppDispatch();
+
+  const currentChatId = useAppSelector(
+    (state) => state.notification.currentChatId
+  );
+
+  // Browser notification support
+  const requestNotificationPermission = useCallback(async () => {
+    if ("Notification" in window) {
+      const permission = await Notification.requestPermission();
+      return permission === "granted";
+    }
+    return false;
+  }, []);
+
+  // Request notification permission on mount
+  useEffect(() => {
+    requestNotificationPermission();
+  }, [requestNotificationPermission]);
+
+  // Show browser notification
+  const showBrowserNotification = useCallback(
+    (senderName: string, messageText: string) => {
+      if ("Notification" in window && Notification.permission === "granted") {
+        const notification = new Notification(
+          `New message from ${senderName}`,
+          {
+            body:
+              messageText.length > 100
+                ? `${messageText.substring(0, 100)}...`
+                : messageText,
+            icon: "/default-avatar.png",
+            badge: "/notification-badge.png",
+            tag: `message-${senderName}`,
+          }
+        );
+
+        // Auto-close after 5 seconds
+        setTimeout(() => notification.close(), 5000);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     // Only create connection if user exists and we don't have a socket or user changed
@@ -70,6 +113,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
             timestamp: notification.timestamp,
           })
         );
+
+        if (notification.fromUserId === currentChatId) {
+          // showBrowserNotification(notification.name, notification.message);
+        }
       });
 
       socket.on("disconnect", () => {
