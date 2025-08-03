@@ -11,12 +11,14 @@ import UserConnectionDetails from "./user-connection-details-popup";
 import { useState } from "react";
 import { BASE_URL } from "@/lib/constants";
 import { useAuth } from "@/contexts/auth-provider";
+import { cn } from "@/lib/utils";
 
 interface UserProps {
   user: User;
+  isOnline: (userId: string) => boolean;
 }
 
-const ConnectionUser = ({ user }: UserProps) => {
+const ConnectionUser = ({ user, isOnline }: UserProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -76,7 +78,12 @@ const ConnectionUser = ({ user }: UserProps) => {
               )}
 
               {/* Online indicator */}
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+              <div
+                className={cn(
+                  "absolute -bottom-1 -right-1 w-5 h-5  rounded-full border-2 border-white",
+                  isOnline(user._id) ? "bg-green-500" : "bg-gray-300"
+                )}
+              ></div>
             </div>
 
             <div className="flex-1">

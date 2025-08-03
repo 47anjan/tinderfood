@@ -10,6 +10,7 @@ import Header from "@/components/home/Header";
 import { useAuth } from "@/contexts/auth-provider";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useSocket } from "@/contexts/socket-provider";
 
 const FoodiesPage = () => {
   const [users, setUsers] = useState<User[] | null>(null);
@@ -17,6 +18,10 @@ const FoodiesPage = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+
+  const { onlineUsers } = useSocket();
+
+  const isOnline = (userId: string) => onlineUsers.find((id) => id === userId);
 
   const { user } = useAuth();
 
@@ -250,7 +255,11 @@ const FoodiesPage = () => {
               {/* Suggestions Grid */}
               <div className="flex flex-col gap-6">
                 {users.map((user) => (
-                  <ConnectionUser key={user._id} user={user} />
+                  <ConnectionUser
+                    isOnline={isOnline}
+                    key={user._id}
+                    user={user}
+                  />
                 ))}
               </div>
 
