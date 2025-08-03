@@ -62,7 +62,6 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       });
 
       socket.on("messageNotification", (notification: any) => {
-        console.log("Received notification:", notification);
         dispatch(
           addUnreadMessage({
             senderId: notification.fromUserId,
