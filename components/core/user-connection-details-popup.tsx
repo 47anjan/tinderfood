@@ -75,6 +75,7 @@ const UserDetailPopup = ({
                   User Profile
                 </h2>
                 <button
+                  title="model close"
                   onClick={onClose}
                   className="p-2 hover:bg-slate-100 cursor-pointer rounded-full transition-colors"
                 >
