@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { User as UserIcon, AlertCircle } from "lucide-react";
 
 import ConnectionUser from "@/components/core/connection-user";
-import UserFilters from "./UserFilters";
+import UserFilters from "../../components/home/UserFilters";
 
 import { User } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
