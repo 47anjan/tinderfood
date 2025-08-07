@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { User as UserIcon, AlertCircle } from "lucide-react";
 
 import ConnectionUser from "@/components/core/connection-user";
+import UserFilters from "./UserFilters";
 
 import { User } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
@@ -12,6 +13,12 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useSocket } from "@/contexts/socket-provider";
 
+interface Filters {
+  search: string;
+  cookingLevel: string;
+  country: string;
+}
+
 const FoodiesPage = () => {
   const [users, setUsers] = useState<User[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -19,18 +26,58 @@ const FoodiesPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
 
+  // Filter states
+  const [filters, setFilters] = useState<Filters>({
+    search: "",
+    cookingLevel: "",
+    country: "",
+  });
+
+  // Applied filters (used for API calls)
+  const [appliedFilters, setAppliedFilters] = useState<Filters>({
+    search: "",
+    cookingLevel: "",
+    country: "",
+  });
+
   const { onlineUsers } = useSocket();
-
   const isOnline = (userId: string) => onlineUsers.find((id) => id === userId);
-
   const { user } = useAuth();
 
   const observerRef = useRef<HTMLDivElement | null>(null);
   const pageRef = useRef(1);
 
+  // Reset page when filters change
+  const resetPagination = () => {
+    pageRef.current = 1;
+    setHasMore(true);
+  };
+
+  const buildApiUrl = (pageNum: number, currentFilters: Filters) => {
+    const params = new URLSearchParams({
+      page: pageNum.toString(),
+      limit: "10",
+    });
+
+    if (currentFilters.search.trim()) {
+      params.append("search", currentFilters.search.trim());
+    }
+    if (currentFilters.cookingLevel) {
+      params.append("cookingLevel", currentFilters.cookingLevel);
+    }
+    if (currentFilters.country.trim()) {
+      params.append("country", currentFilters.country.trim());
+    }
+
+    return `${BASE_URL}/api/users?${params.toString()}`;
+  };
+
   const fetchUsers = useCallback(
-    async (pageNum: number, isInitial: boolean = false) => {
-      // Prevent multiple simultaneous requests
+    async (
+      pageNum: number,
+      isInitial: boolean = false,
+      filtersToUse: Filters = appliedFilters
+    ) => {
       if (loadingMore && !isInitial) return;
 
       try {
@@ -40,16 +87,13 @@ const FoodiesPage = () => {
           setLoadingMore(true);
         }
 
-        const response = await fetch(
-          `${BASE_URL}/api/users?page=${pageNum}&limit=10`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          }
-        );
+        const response = await fetch(buildApiUrl(pageNum, filtersToUse), {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
 
         if (!response.ok) {
           throw new Error(
@@ -61,7 +105,6 @@ const FoodiesPage = () => {
 
         if (result.length === 0) {
           setHasMore(false);
-          console.log("No more users to load. hasMore set to false.");
         } else {
           setUsers((prevUsers) =>
             isInitial ? result : [...(prevUsers || []), ...result]
@@ -76,15 +119,50 @@ const FoodiesPage = () => {
       } catch (err) {
         setLoading(false);
         setLoadingMore(false);
-
         setError(
           err instanceof Error ? err.message : "An unexpected error occurred"
         );
         console.error("Error fetching users:", err);
       }
     },
-    [loadingMore]
+    [loadingMore, appliedFilters]
   );
+
+  // Apply filters and fetch new data
+  const handleApplyFilters = () => {
+    setAppliedFilters(filters);
+    resetPagination();
+    setUsers(null);
+    setError(null);
+    fetchUsers(1, true, filters);
+  };
+
+  // Clear all filters
+  const handleClearFilters = () => {
+    const emptyFilters = { search: "", cookingLevel: "", country: "" };
+    setFilters(emptyFilters);
+    setAppliedFilters(emptyFilters);
+    resetPagination();
+    setUsers(null);
+    setError(null);
+    fetchUsers(1, true, emptyFilters);
+  };
+
+  // Remove individual filter
+  const handleRemoveFilter = (filterKey: keyof Filters) => {
+    const newFilters = { ...appliedFilters, [filterKey]: "" };
+    setFilters(newFilters);
+    setAppliedFilters(newFilters);
+    resetPagination();
+    setUsers(null);
+    setError(null);
+    fetchUsers(1, true, newFilters);
+  };
+
+  // Handle filter changes
+  const handleFiltersChange = (newFilters: Filters) => {
+    setFilters(newFilters);
+  };
 
   useEffect(() => {
     const target = observerRef.current;
@@ -122,9 +200,7 @@ const FoodiesPage = () => {
       <>
         <Header />
         <div className="min-h-screen bg-gradient-to-br from-orange-50/30 to-rose-50/30">
-          {/* Main Content */}
           <main className="max-w-6xl mx-auto px-6 sm:px-10 md:px-[74px] py-8">
-            {/* Page Header */}
             <div className="mb-8">
               <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
                 Discover Food Friends
@@ -149,17 +225,16 @@ const FoodiesPage = () => {
                 href="/login"
                 className={cn(
                   "group relative h-11 flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300",
-
-                  "bg-slate-50  hover:bg-gradient-to-r hover:from-orange-50 hover:to-rose-50 border border-slate-200/80",
+                  "bg-slate-50 hover:bg-gradient-to-r hover:from-orange-50 hover:to-rose-50 border border-slate-200/80",
                   "focus:outline-none focus:ring-2 focus:ring-orange-200 focus:bg-gradient-to-r focus:from-orange-50 focus:to-rose-50",
-                  "hover:border-orange-200/60 "
+                  "hover:border-orange-200/60"
                 )}
               >
                 <UserIcon
                   size={16}
                   className="text-slate-600 transition-colors duration-300 group-hover:text-orange-600"
                 />
-                <span className="text-sm hidden  font-medium text-slate-700 transition-colors duration-300 group-hover:text-orange-600  sm:inline-block">
+                <span className="text-sm hidden font-medium text-slate-700 transition-colors duration-300 group-hover:text-orange-600 sm:inline-block">
                   Login
                 </span>
               </Link>
@@ -174,7 +249,6 @@ const FoodiesPage = () => {
     <>
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-orange-50/30 to-rose-50/30">
-        {/* Main Content */}
         <main className="max-w-6xl mx-auto px-6 sm:px-10 md:px-[74px] py-8">
           {/* Page Header */}
           <div className="mb-8">
@@ -187,10 +261,19 @@ const FoodiesPage = () => {
             </p>
           </div>
 
-          {/* Initial Loading State with Shimmer Effect */}
+          {/* Search and Filter Controls */}
+          <UserFilters
+            filters={filters}
+            appliedFilters={appliedFilters}
+            onFiltersChange={handleFiltersChange}
+            onApplyFilters={handleApplyFilters}
+            onClearFilters={handleClearFilters}
+            onRemoveFilter={handleRemoveFilter}
+          />
+
+          {/* Loading State */}
           {loading && (
             <div className="flex flex-col gap-6">
-              {/* Loading Skeletons with Shimmer */}
               {[...Array(6)].map((_, index) => (
                 <div
                   key={index}
@@ -198,28 +281,21 @@ const FoodiesPage = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      {/* Avatar Skeleton */}
                       <div className="relative w-16 h-16 rounded-full bg-slate-200 overflow-hidden">
                         <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
                       </div>
-
                       <div className="flex-1">
-                        {/* Name Skeleton */}
                         <div className="relative h-5 bg-slate-200 rounded-md w-32 mb-2 overflow-hidden">
                           <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
                         </div>
-                        {/* Username Skeleton */}
                         <div className="relative h-4 bg-slate-200 rounded-md w-24 mb-1 overflow-hidden">
                           <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
                         </div>
-                        {/* Location Skeleton */}
                         <div className="relative h-3 bg-slate-200 rounded-md w-40 overflow-hidden">
                           <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Button Skeleton */}
                     <div className="flex items-center gap-2">
                       <div className="relative h-9 w-24 bg-slate-200 rounded-xl overflow-hidden">
                         <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
@@ -252,7 +328,6 @@ const FoodiesPage = () => {
           {/* Success State - Users List */}
           {!loading && !error && users && (
             <>
-              {/* Suggestions Grid */}
               <div className="flex flex-col gap-6">
                 {users.map((user) => (
                   <ConnectionUser
@@ -296,10 +371,11 @@ const FoodiesPage = () => {
                     <UserIcon size={32} className="text-orange-600" />
                   </div>
                   <h3 className="text-xl font-semibold text-slate-800 mb-2">
-                    No suggestions yet
+                    No users found
                   </h3>
                   <p className="text-slate-600">
-                    Check back later for new food friends to connect with!
+                    Try adjusting your search or filter criteria to find more
+                    food friends!
                   </p>
                 </div>
               )}
