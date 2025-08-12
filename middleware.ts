@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PROTECTED_ROUTES = ["/dashboard"];
+const PROTECTED_ROUTES = ["/dashboard", "/chat"];
 const AUTH_ROUTES = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
@@ -49,6 +49,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Simpler matcher for testing
+    "/chat/:path*",
     "/dashboard/:path*",
     "/login",
     "/signup",
