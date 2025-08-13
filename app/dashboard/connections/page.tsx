@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { Users, UserPlus, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-import { Friends, Pending, Requests } from "@/components/connections";
+// import Friends from "@/components/connections/Friends";
+// import Requests from "@/components/connections/Requests";
+// import Pending from "@/components/connections/Pending";
 
 const ConnectionsPage = () => {
   const [activeTab, setActiveTab] = useState("friends");
@@ -85,21 +86,9 @@ const ConnectionsPage = () => {
       </nav>
 
       <div className="mt-8  bg-white rounded-xl border border-slate-200">
-        {activeTab === "friends" && (
-          <div>
-            <Friends />
-          </div>
-        )}
-        {activeTab === "requests" && (
-          <div>
-            <Requests />
-          </div>
-        )}
-        {activeTab === "pending" && (
-          <div>
-            <Pending />
-          </div>
-        )}
+        {activeTab === "friends" && <div>{/* <Friends /> */}</div>}
+        {activeTab === "requests" && <div>{/* <Requests /> */}</div>}
+        {activeTab === "pending" && <div>{/* <Pending /> */}</div>}
       </div>
     </div>
   );
