@@ -5,7 +5,7 @@ import { UserRequestReceived } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 import React, { useEffect, useState } from "react";
-import RequestActionButtons from "./RequestActionButtons";
+import RequestActionButtons from "../RequestActionButtons";
 
 const Requests = () => {
   const [requests, setRequests] = useState<UserRequestReceived[] | null>(null);

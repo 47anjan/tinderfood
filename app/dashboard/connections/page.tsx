@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { fetchConnections } from "@/store/slices/connectionSlice";
 import UserConnectionDetails from "@/components/core/user-connection-popup";
-import ButtonCancelRequest from "@/components/connections/ButtonCancelRequest";
+import ButtonCancelRequest from "@/components/ButtonCancelRequest";
 
 import { BASE_URL } from "@/lib/constants";
 import { UserRequestPending, UserRequestReceived } from "@/lib/types";
-import RequestActionButtons from "@/components/connections/RequestActionButtons";
+import RequestActionButtons from "@/components/RequestActionButtons";
 
 const ConnectionsPage = () => {
   const [activeTab, setActiveTab] = useState("friends");

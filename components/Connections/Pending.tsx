@@ -5,7 +5,7 @@ import { UserRequestPending } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 import React, { useEffect, useState } from "react";
-import ButtonCancelRequest from "./ButtonCancelRequest";
+import ButtonCancelRequest from "../ButtonCancelRequest";
 
 const Pending = () => {
   const [requests, setRequests] = useState<UserRequestPending[] | null>(null);
