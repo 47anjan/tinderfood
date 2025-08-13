@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { Users, UserPlus, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import Pending from "@/components/connections/PendingTest";
 import Requests from "@/components/connections/Requests";
-import Pending from "@/components/connections/Pending";
 import Friends from "@/components/connections/Friends";
 
 const ConnectionsPage = () => {
