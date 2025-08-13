@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { Users, UserPlus, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Requests from "../../../../components/connections/Requests";
-import Pending from "../../../../components/connections/Pending";
-import Friends from "../../../../components/connections/Friends";
+import Requests from "@/components/connections/Requests";
+import Pending from "@/components/connections/Pending";
+import Friends from "@/components/connections/Friends";
 
 const ConnectionsPage = () => {
   const [activeTab, setActiveTab] = useState("friends");
