@@ -5,8 +5,8 @@ import { Users, UserPlus, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import Pending from "@/components/connections/pending";
-import Requests from "@/components/connections/Requests";
-import Friends from "@/components/connections/Friends";
+import Requests from "@/components/connections/requests";
+import Friends from "@/components/connections/friends";
 
 const ConnectionsPage = () => {
   const [activeTab, setActiveTab] = useState("friends");
