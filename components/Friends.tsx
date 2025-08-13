@@ -3,7 +3,7 @@
 import { User as UserIcon, AlertCircle } from "lucide-react";
 
 import React, { useEffect } from "react";
-import UserConnectionDetails from "../core/user-connection-popup";
+import UserConnectionDetails from "./core/user-connection-popup";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { fetchConnections } from "@/store/slices/connectionSlice";
 

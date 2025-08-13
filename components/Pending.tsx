@@ -1,14 +1,14 @@
 "use client";
 
 import { User as UserIcon, AlertCircle } from "lucide-react";
-import { UserRequestReceived } from "@/lib/types";
+import { UserRequestPending } from "@/lib/types";
 import { BASE_URL } from "@/lib/constants";
 
 import React, { useEffect, useState } from "react";
-import RequestActionButtons from "../RequestActionButtons";
+import ButtonCancelRequest from "./ButtonCancelRequest";
 
-const Requests = () => {
-  const [requests, setRequests] = useState<UserRequestReceived[] | null>(null);
+const Pending = () => {
+  const [requests, setRequests] = useState<UserRequestPending[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +18,7 @@ const Requests = () => {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`${BASE_URL}/api/user/requests/received`, {
+        const response = await fetch(`${BASE_URL}/api/user/requests/pending`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const Requests = () => {
     getRequests();
   }, []);
   const getCookingLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
+    switch (level?.toLowerCase()) {
       case "beginner":
         return "bg-green-100 text-green-700 border-green-200";
       case "intermediate":
@@ -111,9 +111,6 @@ const Requests = () => {
                     <div className="relative h-10 w-24 bg-slate-200 rounded-xl overflow-hidden">
                       <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
                     </div>
-                    <div className="relative h-10 w-24 bg-slate-200 rounded-xl overflow-hidden">
-                      <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent"></div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -141,7 +138,7 @@ const Requests = () => {
         {!loading && !error && requests && (
           <>
             <div className="flex flex-col gap-6">
-              {requests.map((req) => (
+              {requests?.map((req) => (
                 <div
                   key={req._id}
                   className="bg-white rounded-2xl p-6 border border-slate-100 transition-all duration-300"
@@ -151,8 +148,8 @@ const Requests = () => {
                       {/* Avatar */}
                       <div className="relative">
                         <img
-                          src={req.fromUserId.avatar}
-                          alt={req.fromUserId.name}
+                          src={req.toUserId.avatar}
+                          alt={req.toUserId.name}
                           className="w-16 h-16 rounded-full object-cover ring-2 ring-orange-100"
                         />
                       </div>
@@ -161,10 +158,10 @@ const Requests = () => {
                         {/* Name and Username */}
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-slate-800 text-lg">
-                            {req.fromUserId.name}
+                            {req.toUserId.name}
                           </h3>
                           <span className="text-slate-500 text-sm">
-                            @{req.fromUserId.username}
+                            @{req.toUserId.username}
                           </span>
                         </div>
 
@@ -172,13 +169,11 @@ const Requests = () => {
                         <div className="flex items-center gap-2 mb-2">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium border ${getCookingLevelColor(
-                              req.fromUserId.cookingLevel
+                              req.toUserId.cookingLevel
                             )}`}
                           >
-                            {req.fromUserId.cookingLevel
-                              .charAt(0)
-                              .toUpperCase() +
-                              req.fromUserId.cookingLevel.slice(1)}{" "}
+                            {req.toUserId.cookingLevel.charAt(0).toUpperCase() +
+                              req.toUserId.cookingLevel.slice(1)}{" "}
                             Cook
                           </span>
                           <span className="text-slate-400 text-xs">
@@ -188,13 +183,13 @@ const Requests = () => {
 
                         {/* Request Message */}
                         <p className="text-slate-600 text-sm">
-                          {req.fromUserId.bio}
+                          {req.toUserId.bio}
                         </p>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <RequestActionButtons requestId={req._id} />
+                    <ButtonCancelRequest requestId={req._id} />
                   </div>
                 </div>
               ))}
@@ -222,4 +217,4 @@ const Requests = () => {
   );
 };
 
-export default Requests;
+export default Pending;
