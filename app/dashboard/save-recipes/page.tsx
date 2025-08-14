@@ -35,12 +35,9 @@ const SavedRecipesPage = () => {
     const fetchSavedRecipes = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(
-          "http://localhost:5000/api/user/favoriteRecipes",
-          {
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${BASE_URL}/api/user/favoriteRecipes`, {
+          credentials: "include",
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch saved recipes");
         }
