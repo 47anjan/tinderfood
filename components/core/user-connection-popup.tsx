@@ -91,9 +91,7 @@ const UserDetailPopup = ({ user, isOpen, onClose }: UserDetailPopupProps) => {
                       </div>
                     )}
 
-                    {/* Online indicator */}
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white"></div>
-                  </div>
+                 
 
                   <div className="flex-1">
                     <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1">
