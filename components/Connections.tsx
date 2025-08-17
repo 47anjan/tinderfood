@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, AlertCircle, User as UserIcon, Home } from "lucide-react";
+import {
+  Search,
+  AlertCircle,
+  User as UserIcon,
+  Home,
+  ArrowLeft,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { fetchConnections } from "@/store/slices/connectionSlice";
@@ -205,15 +211,29 @@ const Connections = () => {
           </>
         )}
       </div>
-      <div className="p-5">
-        <Link
-          onClick={() => {
-            dispatch(setCurrentChat(null));
-          }}
-          href="/"
-        >
-          <Home className="text-gray-700" />
-        </Link>
+
+      <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="px-6 py-4 flex items-center gap-4">
+          <Link
+            onClick={() => {
+              dispatch(setCurrentChat(null));
+            }}
+            href="/dashboard/connections"
+            className="flex items-center justify-center w-11 h-11 rounded-xl bg-nav-button hover:bg-nav-button-hover active:bg-nav-button-active transition-all duration-200 group border border-gray-200/50 hover:border-gray-200 hover:shadow-sm active:scale-95"
+          >
+            <ArrowLeft className="w-5 h-5 text-nav-icon group-hover:text-nav-icon-hover group-active:text-nav-icon-active transition-colors duration-200" />
+          </Link>
+
+          <Link
+            onClick={() => {
+              dispatch(setCurrentChat(null));
+            }}
+            href="/"
+            className="flex items-center justify-center w-11 h-11 rounded-xl bg-nav-button hover:bg-nav-button-hover active:bg-nav-button-active transition-all duration-200 group border border-gray-200/50 hover:border-gray-200 hover:shadow-sm active:scale-95"
+          >
+            <Home className="w-5 h-5 text-nav-icon group-hover:text-nav-icon-hover group-active:text-nav-icon-active transition-colors duration-200" />
+          </Link>
+        </div>
       </div>
     </div>
   );
