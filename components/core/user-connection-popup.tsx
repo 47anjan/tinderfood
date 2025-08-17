@@ -90,8 +90,7 @@ const UserDetailPopup = ({ user, isOpen, onClose }: UserDetailPopupProps) => {
                         <UserIcon size={32} className="text-orange-600" />
                       </div>
                     )}
-
-                 
+                  </div>
 
                   <div className="flex-1">
                     <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1">
