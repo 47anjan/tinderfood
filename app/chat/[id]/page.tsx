@@ -49,7 +49,8 @@ const ChatPage = () => {
   const [loadingUser, setLoadingUser] = useState(false);
   const { connections } = useAppSelector((state) => state.connections);
 
-  const { socket, isConnected } = useSocket();
+  const { socket, isConnected, onlineUsers } = useSocket();
+  const isOnline = (userId: string) => onlineUsers.find((id) => id === userId);
 
   const dispatch = useAppDispatch();
 
@@ -257,7 +258,9 @@ const ChatPage = () => {
                   {isTyping ? (
                     <div className="text-sm text-gray-500">Typing...</div>
                   ) : (
-                    <div className=""></div>
+                    <div className="text-sm text-gray-500">
+                      {isOnline(chatId) ? "Online" : "Offline"}
+                    </div>
                   )}
                 </div>
               </div>
