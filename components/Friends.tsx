@@ -1,11 +1,12 @@
 "use client";
 
-import { User as UserIcon, AlertCircle } from "lucide-react";
+import { User as UserIcon, AlertCircle, Mail } from "lucide-react";
 
 import React, { useEffect } from "react";
 import UserConnectionDetails from "./core/user-connection-popup";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import { fetchConnections } from "@/store/slices/connectionSlice";
+import Link from "next/link";
 
 const Friends = () => {
   const {
@@ -144,6 +145,17 @@ const Friends = () => {
                     {/* Action Buttons */}
                     <div className="flex items-center gap-3">
                       <UserConnectionDetails user={user} />
+                      <Link
+                        href={`/chat/${user._id}`}
+                        className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-xl hover:from-orange-600 hover:to-rose-600 transition-all duration-300 font-medium  "
+                      >
+                        <Mail
+                          size={16}
+                          className="transition-transform group-hover:scale-110"
+                        />
+
+                        <span className="font-medium block">Message</span>
+                      </Link>
                     </div>
                   </div>
                 </div>
